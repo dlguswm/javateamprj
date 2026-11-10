@@ -13,7 +13,6 @@ public class TestMain {
         AssignmentManager assignmentManager = new AssignmentManager(courseManager);
         ExamManager examManager = new ExamManager(courseManager);
         ScoreManager scoreManager = new ScoreManager(examManager);
-
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("오늘 날짜를 입력해주세요 : (ex.11/01)   ");
@@ -24,6 +23,8 @@ public class TestMain {
 
         assignmentManager.removeExpiredAssignment(todayMonth, todayDay);
         examManager.removeExpiredExam(todayMonth, todayDay);
+//이거 잘 안됨 다시 봐봐....
+
 
         int choice =0;
 
@@ -97,22 +98,23 @@ public class TestMain {
                     }
                 }
 
-                case 4 ->{
-                    System.out.println("======학점 관리======");
-                    scoreManager.showGrade();
-                    System.out.println("1)성적 입력/수정 2)학년별학점보기 3)학기별학점보기 4)메인메뉴로돌아가기");
-                    System.out.print("메뉴 선택 : ");
-                    int choice2 = scanner.nextInt();
+                case 4 -> {
+                    while (true) {
+                        System.out.println("======학점 관리======");
+                        scoreManager.showGrade();
+                        System.out.println("1)성적 입력/수정 2)학년별학점보기 3)학기별학점보기 4)메인메뉴로돌아가기");
+                        System.out.print("메뉴 선택 : ");
+                        int choice2 = scanner.nextInt();
 
-                    if(choice2==4){
-                        break;
+                        if (choice2 == 4) {
+                            break;
+                        }
+                        switch (choice2) {
+                            case 1 -> scoreManager.addGrades(todayMonth, todayDay);
+                            case 2 -> scoreManager.showGradeByGrade();
+                            case 3 -> scoreManager.showGradeBySemester();
+                        }
                     }
-                    switch (choice2){
-                        case 1 -> scoreManager.addGrades(todayMonth, todayDay);
-                        case 2 -> scoreManager.showGradeByGrade();
-                        case 3 -> scoreManager.showGradeBySemester();
-                    }
-
                 }
 
                 case 5 ->{
