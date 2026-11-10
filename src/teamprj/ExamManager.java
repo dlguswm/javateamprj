@@ -86,14 +86,15 @@ public class ExamManager {
         return exams.get(index);
     }
 
-    public String getExamName(int index){
-        if(index < 0 || index >= exams.size()) {
-            return null;
-        }
-        return exams.get(index).getCourseName();
-    }
+//    public Exam getExamByExamName(String examName){
+//        for(Exam exam : exams){
+//            if(exam.getCourseName().equals(examName)){
+//                return exam;
+//            }
+//        }
+//        return null;
+//    }
 
-    // /////////////////////////////학점메니저에서 쓸 듯?
 
 }
 
