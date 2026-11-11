@@ -23,6 +23,22 @@ public class Assignment {
         return course;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public int getDueMonth() {
+        return dueMonth;
+    }
+
+    public int getDueDay() {
+        return dueDay;
+    }
+
+    public boolean isDone() {
+        return done;
+    }
+
     public void setDone(boolean done) {
         this.done = done;
     }

@@ -20,8 +20,13 @@ public class CourseManager {
         int grade = Input.readInt(scanner);
         System.out.print("학기: ");
         int semester = Input.readInt(scanner,1,2);
-        //scanner.nextLine();
 
+        for(Course c : courses){
+            if(c.getCourseName().equals(courseName) && c.getGrade()== grade && c.getSemester() == semester){
+                System.out.println("이미 같은 강의가 등록되어 있습니다.");
+                return;
+            }
+        }
         Course course = new Course(courseName, credit, grade, semester);
         courses.add(course); //ArrayList에 추가하기
     }

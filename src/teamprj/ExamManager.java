@@ -24,14 +24,21 @@ public class ExamManager {
         if (course == null) {
             System.out.println("강의 번호를 다시 확인해 주세요.");
             return;
-        } else {
-            int[] date = Ddaycalculate.readDate(scanner, "시험 날짜를 입력하세요 : (ex.11/01)   ");
-            int examMonth = date[0];
-            int examDay = date[1];
-
-            Exam exam = new Exam(course, examMonth, examDay);
-            exams.add(exam);
         }
+        int[] date = Ddaycalculate.readDate(scanner, "시험 날짜를 입력하세요 : (ex.11/01)   ");
+        int examMonth = date[0];
+        int examDay = date[1];
+
+        for(Exam e : exams){
+            if(e.getCourse() == course && e.getExamMonth()== examMonth && e.getExamDay() == examDay){
+                System.out.println("이미 같은 날짜의 시험이 등록되어 있습니다.");
+                return;
+            }
+        }
+
+        Exam exam = new Exam(course, examMonth, examDay);
+        exams.add(exam);
+
     }
 
     public void showExams(int todayMonth, int todayDay) {

@@ -30,6 +30,13 @@ public class AssignmentManager {
         int[] due = Ddaycalculate.readDate(scanner, "과제 마감 날짜 : (ex.11/01)   ");
         int dueMonth = due[0];
         int dueDay = due[1];
+
+        for(Assignment a : assignments){
+            if(a.getCourse() == course && a.getDueMonth() == dueMonth && a.getDueDay() == dueDay){
+                System.out.println("이미 같은 과제가 등록되어 있습니다.");
+                return;
+            }
+        }
         System.out.print("제출 여부 : (y or n)   ");
         String done1 = scanner.nextLine().trim();
         boolean done2 = done1.equalsIgnoreCase("y");
@@ -117,10 +124,6 @@ public class AssignmentManager {
         showAssignment(todayMonth, todayDay);
         System.out.print("제출 여부를 변경할 과제 번호 : ");
         int choice = Input.readInt(scanner,1,assignments.size());
-        //if (choice < 1 || choice > assignments.size()) {
-        //    System.out.println("잘못된 번호입니다.");
-        //    return;
-        //}
 
         Assignment assignment = assignments.get(choice - 1);
         System.out.print("제출 완료했나요? (y/n) :  ");
