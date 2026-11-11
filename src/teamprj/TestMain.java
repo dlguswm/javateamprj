@@ -9,22 +9,19 @@ public class TestMain {
     }
 
     public void menu(){
-        CourseManager courseManager = new CourseManager();
-        AssignmentManager assignmentManager = new AssignmentManager(courseManager);
-        ExamManager examManager = new ExamManager(courseManager);
-        ScoreManager scoreManager = new ScoreManager(examManager);
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("오늘 날짜를 입력해주세요 : (ex.11/01)   ");
-        String today = scanner.nextLine();
-        String[] parts = today.split("/");
-        int todayMonth = Integer.parseInt(parts[0]);
-        int todayDay = Integer.parseInt(parts[1]);
+        CourseManager courseManager = new CourseManager(scanner);
+        AssignmentManager assignmentManager = new AssignmentManager(courseManager, scanner);
+        ExamManager examManager = new ExamManager(courseManager, scanner);
+        ScoreManager scoreManager = new ScoreManager(examManager, scanner);
+
+        int[] today = Ddaycalculate.readDate(scanner, "오늘 날짜를 입력해주세요 : (ex.11/01)   ");
+        int todayMonth = today[0];
+        int todayDay = today[1];
 
         assignmentManager.removeExpiredAssignment(todayMonth, todayDay);
         examManager.removeExpiredExam(todayMonth, todayDay);
-//이거 잘 안됨 다시 봐봐....
-
 
         int choice =0;
 
@@ -33,10 +30,7 @@ public class TestMain {
 
             System.out.println("1)강의관리 2)과제관리 3)시험관리 4)학점관리 5)종료");
             System.out.print("메뉴 선택 : ");
-            choice = scanner.nextInt();
-
-            if(!(choice>=1 && choice<=5))
-                System.out.println("메뉴를 확인해 주세요"); //이거 나중에 예외처리로 바꾸기
+            choice = Input.readInt(scanner,1,5);
 
             switch(choice){
                 case 1 -> {
@@ -46,7 +40,7 @@ public class TestMain {
                         System.out.println("1)강의추가 2)강의삭제 3)메인메뉴로돌아가기");
                         System.out.print("메뉴 선택 : ");
 
-                        int choice2 = scanner.nextInt();
+                        int choice2 = Input.readInt(scanner,1,3);
                         if(choice2 == 3){
                             break;
                         }
@@ -65,7 +59,7 @@ public class TestMain {
                         System.out.println("1)과제추가 2)과제삭제 3)제출완료 4)강의별과제보기 5)메인메뉴로돌아가기");
                         System.out.print("메뉴 선택 : ");
 
-                        int choice2 = scanner.nextInt();
+                        int choice2 = Input.readInt(scanner,1,5);
                         if(choice2 ==5){
                             break;
                         }
@@ -85,7 +79,7 @@ public class TestMain {
                         examManager.showExams(todayMonth, todayDay);
                         System.out.println("1)시험추가 2)시험삭제 3)메인메뉴로돌아가기");
                         System.out.print("메뉴 선택 : ");
-                        int choice2 = scanner.nextInt();
+                        int choice2 = Input.readInt(scanner,1,3);
 
                         if(choice2 ==3 ){
                             break;
@@ -104,7 +98,7 @@ public class TestMain {
                         scoreManager.showGrade();
                         System.out.println("1)성적 입력/수정 2)학년별학점보기 3)학기별학점보기 4)메인메뉴로돌아가기");
                         System.out.print("메뉴 선택 : ");
-                        int choice2 = scanner.nextInt();
+                        int choice2 = Input.readInt(scanner,1,4);
 
                         if (choice2 == 4) {
                             break;

@@ -1,5 +1,6 @@
 package teamprj;
 
+import javax.imageio.stream.IIOByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -7,16 +8,17 @@ import java.util.Scanner;
 public class AssignmentManager {
     private ArrayList<Assignment> assignments = new ArrayList<>();
     private CourseManager courseManager;
-    Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
 
-    public AssignmentManager(CourseManager courseManager) {
+    public AssignmentManager(CourseManager courseManager, Scanner scanner) {
         this.courseManager = courseManager;
+        this.scanner = scanner;
     }//코스매니저 받아오는 생성자 //AssignmentManger에서 CourseManager에 있는 기능 사용하려고.
 
     public void addAssignment() {
         courseManager.showCourses();
         System.out.print("과제를 등록할 강의 번호 : ");
-        int choice = Integer.parseInt(scanner.nextLine());
+        int choice = Input.readInt(scanner);
         Course course = courseManager.getCourseByIndex(choice - 1);
 
         if (course == null) {
@@ -24,12 +26,11 @@ public class AssignmentManager {
             return;
         }
         System.out.print("등록할 과제명을 입력하세요 : ");
-        String title = scanner.nextLine();
-        System.out.print("과제 마감 날짜 : (ex.11/01)   ");
-        String dueDate = scanner.nextLine();
-        String[] parts1 = dueDate.split("/");
-        int dueMonth = Integer.parseInt(parts1[0]);
-        int dueDay = Integer.parseInt(parts1[1]);
+        String title = Input.readString(scanner);
+        // 기존 dueDate 입력 + split + parseInt 4줄을 이걸로 교체
+        int[] due = Ddaycalculate.readDate(scanner, "과제 마감 날짜 : (ex.11/01)   ");
+        int dueMonth = due[0];
+        int dueDay = due[1];
         System.out.print("제출 여부 : (y or n)   ");
         String done1 = scanner.nextLine().trim();
         boolean done2 = done1.equalsIgnoreCase("y");
@@ -74,7 +75,7 @@ public class AssignmentManager {
         }
         courseManager.showCourses();
         System.out.print("조회할 강의의 과제 번호 : ");
-        int choice = Integer.parseInt(scanner.nextLine());
+        int choice = Input.readInt(scanner);
         Course course = courseManager.getCourseByIndex(choice - 1);
 
         if (course == null) {
@@ -101,7 +102,7 @@ public class AssignmentManager {
         }
         showAssignment(todayMonth, todayDay);
         System.out.println("삭제할 과제 번호 : ");
-        int index = Integer.parseInt(scanner.nextLine()) - 1;
+        int index = Input.readInt(scanner) - 1;
         if ((index) < 0 || index >= assignments.size()) {
             System.out.println("잘못된 번호입니다.");
             return;
@@ -116,8 +117,8 @@ public class AssignmentManager {
         }
         showAssignment(todayMonth, todayDay);
         System.out.print("제출 여부를 변경할 과제 번호 : ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int choice = Input.readInt(scanner);
+        //scanner.nextLine();
         if (choice < 1 || choice > assignments.size()) {
             System.out.println("잘못된 번호입니다.");
             return;
@@ -149,4 +150,7 @@ public class AssignmentManager {
         }
     }
 
+    public ArrayList<Assignment> getAssignments() {
+        return assignments;
+    }
 }

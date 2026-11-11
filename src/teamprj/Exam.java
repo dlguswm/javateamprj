@@ -30,7 +30,7 @@ public class Exam {
         return this.course.getCourseName();
     }
 
-    public int getCredit(){
+    public float getCredit(){
         return this.course.getCredit();
     }
 
@@ -44,6 +44,7 @@ public class Exam {
     /// 왜 Course거 안 쓰냐면 강의는 듣지만 시험은 안 보는 과목 있을 수 있으니 ??
     /// 시험을 봐야 -> 성적이 나오기 ??
     /// 아니면 걍 Courseㄱ거 써도 되나/...??
+
 
     @Override
     public String toString() {

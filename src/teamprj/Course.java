@@ -2,11 +2,11 @@ package teamprj;
 
 public class Course {
     private String courseName;
-    private int credit;
+    private float credit;
     private int grade;
     private int semester;
 
-    public Course(String courseName, int credit, int grade, int semester) {
+    public Course(String courseName, float credit, int grade, int semester) {
         this.courseName = courseName;
         this.credit = credit;
         this.grade = grade;
@@ -16,7 +16,7 @@ public class Course {
     public String getCourseName() {
         return courseName;
     }
-    public int getCredit() {
+    public float getCredit() {
         return credit;
     }
     public int getGrade() {

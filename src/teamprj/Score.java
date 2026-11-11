@@ -38,7 +38,7 @@ public class Score {
 
     @Override
     public String toString() {
-        return "<"+exam.getGrade()+"-"+exam.getSemester()+"> \n ["
+        return "<"+exam.getGrade()+"-"+exam.getSemester()+"> ["
                 +exam.getCourseName()+"] | "+exam.getCredit()+"학점 | 받은 성적 : "+score;
     }
 

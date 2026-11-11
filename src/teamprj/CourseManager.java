@@ -5,18 +5,22 @@ import java.util.Scanner;
 
 public class CourseManager {
     private ArrayList<Course> courses = new ArrayList<>();
-    Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
+
+    public CourseManager(Scanner scanner) {
+        this.scanner = scanner;
+    }
 
     public void addCourse() {
         System.out.print("강의명: ");
         String courseName = scanner.nextLine();
         System.out.print("학점: ");
-        int credit = scanner.nextInt();
+        float credit = Input.readFloat(scanner,0f,4.5f);
         System.out.print("학년: ");
-        int grade = scanner.nextInt();
+        int grade = Input.readInt(scanner);
         System.out.print("학기: ");
-        int semester = scanner.nextInt();
-        scanner.nextLine();
+        int semester = Input.readInt(scanner,1,2);
+        //scanner.nextLine();
 
         Course course = new Course(courseName, credit, grade, semester);
         courses.add(course); //ArrayList에 추가하기
@@ -29,10 +33,12 @@ public class CourseManager {
         }else{
             System.out.println("------- 강의 목록 -------");
             for(int i =0; i< courses.size(); i++){
-                System.out.println((i+1)+"."+courses.get(i));
+                System.out.println((i+1)+"."+courses.get(i)); //얘도 포이치로 바ㅜ꺼라
             }
         }
     }
+
+
 
     public void deleteCourse(){
         if(courses.isEmpty()){
@@ -41,7 +47,7 @@ public class CourseManager {
         }else{
             showCourses();
             System.out.print("삭제할 강의 번호: ");
-            int index = Integer.parseInt(scanner.nextLine())-1;
+            int index = Input.readInt(scanner)-1;
 
             if(index<0 || index>= courses.size()){
                 System.out.println("잘못된 번호입니다.");

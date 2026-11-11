@@ -8,18 +8,19 @@ import java.util.Scanner;
 public class ScoreManager {
     private LinkedHashMap<Exam, Score> scores = new LinkedHashMap<>();
     private ExamManager examManager;
-    Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
 
-    public ScoreManager(ExamManager examManager) {
+    public ScoreManager(ExamManager examManager, Scanner scanner) {
         this.examManager = examManager;
+        this.scanner = scanner;
     }
 
     public void addGrades(int todayMonth, int todayDay){
         showGrade();
         examManager.showExams(todayMonth, todayDay);
         System.out.print("성적을 입력/수정 할 시험 번호 : ");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
+        int choice = Input.readInt(scanner);
+        //scanner.nextLine();
         Exam exam = examManager.getExamByIndex(choice-1);
 
         if(exam == null){
@@ -27,7 +28,7 @@ public class ScoreManager {
             return;
         }else {
             System.out.print("성적을 입력하세요 : ");
-            float value = Float.parseFloat(scanner.nextLine());
+            float value = Input.readFloat(scanner,0f,4.5f);
 
             Score old = scores.get(exam);
             if(old != null){
@@ -55,12 +56,12 @@ public class ScoreManager {
         System.out.print("[총 학점} : ");
         printGpa(list);
 
-    }//출력되는 거 수정 해 <1학년2>학기이게 ㄱㅖ소ㅗㄱ 출력됨 일단 Score 오버라이딩 바꾸고 ...여기서 뭐 잘 해봐>
+    }
 
     public void showGradeByGrade(){//학년 별 보여주기
         System.out.print("조회할 성의 학년을 입력해주세요 : ");
-        int grade = scanner.nextInt();
-        scanner.nextLine();
+        int grade = Input.readInt(scanner);
+        //scanner.nextLine();
 
         List<Score> list = new ArrayList<>(scores.values());
         for (Score score : scores.values()) {
@@ -84,10 +85,10 @@ public class ScoreManager {
 
     public void showGradeBySemester() { // 학년+학기 별 보여주기 + 해당 학기 평점평균
         System.out.print("조회할 성적의 학년을 입력해주세요 : ");
-        int grade = scanner.nextInt();
+        int grade = Input.readInt(scanner);
         System.out.print("조회할 성적의 학기를 입력해주세요 : ");
-        int semester = scanner.nextInt();
-        scanner.nextLine();
+        int semester = Input.readInt(scanner,1,2);
+        //scanner.nextLine();
 
         List<Score> list = new ArrayList<>();
         for (Score score : scores.values()) {
@@ -113,7 +114,7 @@ public class ScoreManager {
         double sum =0;
         int totalCredit =0;
         for(Score s : list){
-            int credit = s.getExam().getCredit();
+            float credit = s.getExam().getCredit();
             sum += credit*s.getScore();
         }
         if(totalCredit ==0){
@@ -134,4 +135,7 @@ public class ScoreManager {
         System.out.printf("총 %d학점 | 평점평균 : %.2f%n",calcTotalCredit(list), calcGpa(list));
     }
 
+    public LinkedHashMap<Exam, Score> getScores() {
+        return scores;
+    }
 }

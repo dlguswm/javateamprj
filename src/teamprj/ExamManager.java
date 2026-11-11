@@ -7,27 +7,26 @@ import java.util.Scanner;
 public class ExamManager {
     private ArrayList<Exam> exams = new ArrayList<>();
     private CourseManager courseManager;
-    Scanner scanner = new Scanner(System.in);
+    private final Scanner scanner;
 
-    public ExamManager(CourseManager courseManager) {
+    public ExamManager(CourseManager courseManager, Scanner scanner) {
         this.courseManager = courseManager;
+        this.scanner =scanner;
     }
 
     public void addExam() {
         courseManager.showCourses();
         System.out.print("시험을 등록할 강의 번호 : ");
-        int choice = Integer.parseInt(scanner.nextLine());
+        int choice = Input.readInt(scanner);
         Course course = courseManager.getCourseByIndex(choice - 1);
 
         if (course == null) {
             System.out.println("강의 번호를 다시 확인해 주세요.");
             return;
         } else {
-            System.out.print("시험 날짜를 입력하세요 : (ex.11/01)   ");
-            String examDate = scanner.nextLine();
-            String[] parts1 = examDate.split("/");
-            int examMonth = Integer.parseInt(parts1[0]);
-            int examDay = Integer.parseInt(parts1[1]);
+            int[] date = Ddaycalculate.readDate(scanner, "시험 날짜를 입력하세요 : (ex.11/01)   ");
+            int examMonth = date[0];
+            int examDay = date[1];
 
             Exam exam = new Exam(course, examMonth, examDay);
             exams.add(exam);
@@ -55,7 +54,7 @@ public class ExamManager {
         }else{
             showExams(todayMonth, todayDay);
             System.out.print("삭제할 시험 번호: ");
-            int index = Integer.parseInt(scanner.nextLine())-1;
+            int index = Input.readInt(scanner)-1;
 
             if(index<0 || index>= exams.size()){
                 System.out.println("잘못된 번호입니다.");
@@ -76,8 +75,11 @@ public class ExamManager {
         }
     }
 
+    public ArrayList<Exam> getExams() {
+        return exams;
+    }
 
-    // ///////////////////////////////////////
+// ///////////////////////////////////////
 
     public Exam getExamByIndex(int index) {
         if (index < 0 || index >= exams.size()) {
