@@ -29,7 +29,7 @@ public class DataManager {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 4) {
-                    Course course = new Course(parts[0], Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
+                    Course course = new Course(parts[0], Float.parseFloat(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
                     cm.getCourses().add(course);
                 }
             }

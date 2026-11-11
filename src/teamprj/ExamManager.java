@@ -55,7 +55,6 @@ public class ExamManager {
         }
     }
 
-    // [6번] 삭제한 시험을 반환 (취소/실패 시 null)
     public Exam deleteExam(int todayMonth, int todayDay) {
         if (exams.isEmpty()) {
             System.out.println("등록된 시험이 없습니다.");
@@ -72,7 +71,7 @@ public class ExamManager {
         return exams.remove(index);
     }
 
-    // [6번] 만료되어 지워진 시험 목록을 반환
+    // 만료되어 지워진 시험 목록을 반환
     public List<Exam> removeExpiredExam(int todayMonth, int todayDay) {
         List<Exam> removed = new ArrayList<>();
         Iterator<Exam> it = exams.iterator();
@@ -86,7 +85,7 @@ public class ExamManager {
         return removed;
     }
 
-    // [5번] 강의 삭제 시 해당 강의의 시험 삭제 + 지워진 시험 반환
+    // 강의 삭제 시 해당 강의의 시험 삭제 + 지워진 시험 반환
     public List<Exam> removeByCourse(Course course) {
         List<Exam> removed = new ArrayList<>();
         for (Exam e : exams) {
