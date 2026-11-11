@@ -38,37 +38,32 @@ public class CourseManager {
         }
     }
 
-
-
-    public void deleteCourse(){
-        if(courses.isEmpty()){
+    public Course deleteCourse() {
+        if (courses.isEmpty()) {
             System.out.println("등록된 강의가 없습니다.");
-            return;
-        }else{
-            showCourses();
-            System.out.print("삭제할 강의 번호: ");
-            int index = Input.readInt(scanner)-1;
-
-            if(index<0 || index>= courses.size()){
-                System.out.println("잘못된 번호입니다.");
-                return;
-            }
-            Course course = courses.remove(index);
+            return null;
         }
+        showCourses();
+        System.out.print("삭제할 강의 번호: ");
+        int index = Input.readInt(scanner) - 1;
+
+        if (index < 0 || index >= courses.size()) {
+            System.out.println("잘못된 번호입니다.");
+            return null;
+        }
+        return courses.remove(index);
     }
+
 
     public ArrayList<Course> getCourses(){
         return courses;
     }
 
-    // 번호로 강의 가져오기
     public Course getCourseByIndex(int index) {
         if (index < 0 || index >= courses.size()) {
             return null;
         }
         return courses.get(index);
     }
-    // 나중에 과제나 시험을 추가할 때 사용
-    //사용자가 강의를 선택하면 해당 강의를 가져와서 과제나 시험 객체에 전닳하기ㅣ
 
 }

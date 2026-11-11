@@ -30,7 +30,7 @@ public class Assignment {
     @Override
     public String toString() {
         if (done == true) {
-            return "[" + course.getCourseName() + "] " + title + " | 제출완료 | ";
+            return "[" + course.getCourseName() + "] " + title + " | 제출완료 ** | ";
         }else{
             return "[" + course.getCourseName() + "] " + title + " | 제출미완료 | ";
             // 나중에 매니저에서 뒤에 디데이 붙여서 출력하기

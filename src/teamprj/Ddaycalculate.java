@@ -33,6 +33,7 @@ public class Ddaycalculate{
         return total+day;
     }
 
+
     public static int calcDday(int targetMonth, int targetDay, int todayMonth, int todayDay ){
         return DayofYear(targetMonth, targetDay)- DayofYear(todayMonth,todayDay);
     }// 디데이 계산해주는 메서드

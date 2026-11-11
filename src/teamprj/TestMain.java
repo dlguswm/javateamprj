@@ -1,5 +1,6 @@
 package teamprj;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class TestMain {
@@ -16,12 +17,16 @@ public class TestMain {
         ExamManager examManager = new ExamManager(courseManager, scanner);
         ScoreManager scoreManager = new ScoreManager(examManager, scanner);
 
+        DataManager dataManager = new DataManager();
+        dataManager.loadData(courseManager, assignmentManager, examManager, scoreManager);
+
         int[] today = Ddaycalculate.readDate(scanner, "오늘 날짜를 입력해주세요 : (ex.11/01)   ");
         int todayMonth = today[0];
         int todayDay = today[1];
 
         assignmentManager.removeExpiredAssignment(todayMonth, todayDay);
-        examManager.removeExpiredExam(todayMonth, todayDay);
+        List<Exam> expired = examManager.removeExpiredExam(todayMonth, todayDay);
+        scoreManager.removeScores(expired);
 
         int choice =0;
 
@@ -46,7 +51,14 @@ public class TestMain {
                         }
                         switch (choice2) {
                             case 1 -> courseManager.addCourse();
-                            case 2 -> courseManager.deleteCourse();
+                            case 2 -> {
+                                Course removed = courseManager.deleteCourse();
+                                if(removed != null){
+                                    assignmentManager.removeByCourse(removed);
+                                    List<Exam> removedExams = examManager.removeByCourse(removed);
+                                    scoreManager.removeScores(removedExams);
+                                }
+                            }
                             default -> System.out.println("잘못된 입력입니다.");
                         }
                     }
@@ -86,7 +98,11 @@ public class TestMain {
                         }
                         switch (choice2){
                             case 1 -> examManager.addExam();
-                            case 2 -> examManager.deleteExam(todayMonth,todayDay);
+                            case 2 -> {
+                                Exam removed = examManager.deleteExam(todayMonth,todayDay);
+                                if(removed !=null){
+                                scoreManager.removeScores(List.of(removed));}
+                            }
                             default -> System.out.println("잘못된 입력입니다.");
                         }
                     }
@@ -112,6 +128,8 @@ public class TestMain {
                 }
 
                 case 5 ->{
+                    dataManager.saveData(courseManager, assignmentManager, examManager, scoreManager);
+                    System.out.println("프로그램을 종료합니다.");
                     break;
                 }
 

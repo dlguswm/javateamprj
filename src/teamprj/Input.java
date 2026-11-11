@@ -65,4 +65,5 @@ public class Input {
             System.out.println("y 또는 n로 입력해주세요");
         }
     }
+
 }

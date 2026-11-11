@@ -13,7 +13,7 @@ public class AssignmentManager {
     public AssignmentManager(CourseManager courseManager, Scanner scanner) {
         this.courseManager = courseManager;
         this.scanner = scanner;
-    }//코스매니저 받아오는 생성자 //AssignmentManger에서 CourseManager에 있는 기능 사용하려고.
+    }
 
     public void addAssignment() {
         courseManager.showCourses();
@@ -27,7 +27,6 @@ public class AssignmentManager {
         }
         System.out.print("등록할 과제명을 입력하세요 : ");
         String title = Input.readString(scanner);
-        // 기존 dueDate 입력 + split + parseInt 4줄을 이걸로 교체
         int[] due = Ddaycalculate.readDate(scanner, "과제 마감 날짜 : (ex.11/01)   ");
         int dueMonth = due[0];
         int dueDay = due[1];
@@ -117,12 +116,11 @@ public class AssignmentManager {
         }
         showAssignment(todayMonth, todayDay);
         System.out.print("제출 여부를 변경할 과제 번호 : ");
-        int choice = Input.readInt(scanner);
-        //scanner.nextLine();
-        if (choice < 1 || choice > assignments.size()) {
-            System.out.println("잘못된 번호입니다.");
-            return;
-        }
+        int choice = Input.readInt(scanner,1,assignments.size());
+        //if (choice < 1 || choice > assignments.size()) {
+        //    System.out.println("잘못된 번호입니다.");
+        //    return;
+        //}
 
         Assignment assignment = assignments.get(choice - 1);
         System.out.print("제출 완료했나요? (y/n) :  ");
@@ -136,7 +134,10 @@ public class AssignmentManager {
             System.out.println("잘못된 입력입니다.");
             return;
         }
+    }
 
+    public void removeByCourse(Course course){
+        assignments.removeIf(a -> a.getCourse() == course);
     }
 
     public void removeExpiredAssignment(int todayMonth, int todayDay) { //과제 D+7 되면 자동삭제되게 하기

@@ -61,7 +61,6 @@ public class ScoreManager {
     public void showGradeByGrade(){//학년 별 보여주기
         System.out.print("조회할 성의 학년을 입력해주세요 : ");
         int grade = Input.readInt(scanner);
-        //scanner.nextLine();
 
         List<Score> list = new ArrayList<>(scores.values());
         for (Score score : scores.values()) {
@@ -112,19 +111,17 @@ public class ScoreManager {
 
     private double calcGpa(List<Score> list){
         double sum =0;
-        int totalCredit =0;
+        float totalCredit =0;
         for(Score s : list){
             float credit = s.getExam().getCredit();
             sum += credit*s.getScore();
+            totalCredit += credit;
         }
-        if(totalCredit ==0){
-            return 0;
-        }
-        return sum/totalCredit;
+        return totalCredit ==0 ? 0 : sum/totalCredit;
     }
 
-    private int calcTotalCredit(List<Score> list){
-        int total =0;
+    private float calcTotalCredit(List<Score> list){
+        float total =0;
         for(Score s : list){
             total += s.getExam().getCredit();
         }
@@ -132,7 +129,13 @@ public class ScoreManager {
     }
 
     private void printGpa(List<Score> list){
-        System.out.printf("총 %d학점 | 평점평균 : %.2f%n",calcTotalCredit(list), calcGpa(list));
+        System.out.printf("총 %.1f학점 | 평점평균 : %.2f%n",calcTotalCredit(list), calcGpa(list));
+    }
+
+    public void removeScores(List<Exam> removedExams) {
+        for (Exam e : removedExams) {
+            scores.remove(e);
+        }
     }
 
     public LinkedHashMap<Exam, Score> getScores() {

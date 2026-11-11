@@ -2,6 +2,7 @@ package teamprj;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Scanner;
 
 public class ExamManager {
@@ -11,7 +12,7 @@ public class ExamManager {
 
     public ExamManager(CourseManager courseManager, Scanner scanner) {
         this.courseManager = courseManager;
-        this.scanner =scanner;
+        this.scanner = scanner;
     }
 
     public void addExam() {
@@ -39,47 +40,60 @@ public class ExamManager {
             return;
         } else {
             System.out.println("------ 시험 목록 ------");
-            int num=1;
-            for(Exam exam : exams){
-                System.out.println(num+"."+exam+Ddaycalculate.Dday(exam.getDday(todayMonth, todayDay)));
+            int num = 1;
+            for (Exam exam : exams) {
+                System.out.println(num + "." + exam + Ddaycalculate.Dday(exam.getDday(todayMonth, todayDay)));
                 num++;
             }
         }
     }
 
-    public void deleteExam(int todayMonth, int todayDay){
-        if(exams.isEmpty()){
+    // [6번] 삭제한 시험을 반환 (취소/실패 시 null)
+    public Exam deleteExam(int todayMonth, int todayDay) {
+        if (exams.isEmpty()) {
             System.out.println("등록된 시험이 없습니다.");
-            return;
-        }else{
-            showExams(todayMonth, todayDay);
-            System.out.print("삭제할 시험 번호: ");
-            int index = Input.readInt(scanner)-1;
-
-            if(index<0 || index>= exams.size()){
-                System.out.println("잘못된 번호입니다.");
-                return;
-            }
-            Exam exam = exams.remove(index);
+            return null;
         }
+        showExams(todayMonth, todayDay);
+        System.out.print("삭제할 시험 번호: ");
+        int index = Input.readInt(scanner) - 1;
+
+        if (index < 0 || index >= exams.size()) {
+            System.out.println("잘못된 번호입니다.");
+            return null;
+        }
+        return exams.remove(index);
     }
 
-    public void removeExpiredExam(int todayMonth, int todayDay) {
+    // [6번] 만료되어 지워진 시험 목록을 반환
+    public List<Exam> removeExpiredExam(int todayMonth, int todayDay) {
+        List<Exam> removed = new ArrayList<>();
         Iterator<Exam> it = exams.iterator();
         while (it.hasNext()) {
             Exam e = it.next();
             if (e.getDday(todayMonth, todayDay) <= -7) {
-                //    System.out.println("[자동삭제] " + a);
+                removed.add(e);
                 it.remove();
             }
         }
+        return removed;
+    }
+
+    // [5번] 강의 삭제 시 해당 강의의 시험 삭제 + 지워진 시험 반환
+    public List<Exam> removeByCourse(Course course) {
+        List<Exam> removed = new ArrayList<>();
+        for (Exam e : exams) {
+            if (e.getCourse() == course) {
+                removed.add(e);
+            }
+        }
+        exams.removeAll(removed);
+        return removed;
     }
 
     public ArrayList<Exam> getExams() {
         return exams;
     }
-
-// ///////////////////////////////////////
 
     public Exam getExamByIndex(int index) {
         if (index < 0 || index >= exams.size()) {
@@ -87,16 +101,4 @@ public class ExamManager {
         }
         return exams.get(index);
     }
-
-//    public Exam getExamByExamName(String examName){
-//        for(Exam exam : exams){
-//            if(exam.getCourseName().equals(examName)){
-//                return exam;
-//            }
-//        }
-//        return null;
-//    }
-
-
 }
-
