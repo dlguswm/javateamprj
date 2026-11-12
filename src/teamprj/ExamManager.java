@@ -77,7 +77,7 @@ public class ExamManager {
         Iterator<Exam> it = exams.iterator();
         while (it.hasNext()) {
             Exam e = it.next();
-            if (e.getDday(todayMonth, todayDay) <= -7) {
+            if (e.getDday(todayMonth, todayDay) <= -1) {
                 removed.add(e);
                 it.remove();
             }
