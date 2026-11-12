@@ -20,12 +20,6 @@ public class Exam {
     public int getExamDay() {
         return examDay;
     }
-
-    public int getDday(int todayMonth, int todayDay) {
-        return Ddaycalculate.calcDday(examMonth, examDay,todayMonth, todayDay);
-    }//Ddaycalculate 클래스의 calcDday 메서드를 사용해서 디데이계산. 현재 날짜는 나중에 메인에서 입력받을거임
-
-
     public String getCourseName() {
         return this.course.getCourseName();
     }
@@ -38,6 +32,10 @@ public class Exam {
     public int getSemester() {
         return this.course.getSemester();
     }
+    public int getDday(int todayMonth, int todayDay) {
+        return Ddaycalculate.calcDday(examMonth, examDay,todayMonth, todayDay);
+    }//Ddaycalculate 클래스의 calcDday 메서드를 사용해서 디데이계산. 현재 날짜는 나중에 메인에서 입력받을거임
+
 
 
     @Override
