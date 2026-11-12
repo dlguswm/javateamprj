@@ -36,6 +36,8 @@ public class Score {
         return exam.getSemester();
     }
 
+
+
     @Override
     public String toString() {
         return "<"+exam.getGrade()+"-"+exam.getSemester()+"> ["

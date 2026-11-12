@@ -18,25 +18,19 @@ public class ScoreManager {
     public void addGrades(int todayMonth, int todayDay){
         showGrade();
         examManager.showExams(todayMonth, todayDay);
-        //System.out.print("성적을 입력/수정 할 시험 번호 : ");
         int choice = Input.readInt(scanner,"성적을 입력/수정 할 시험 번호 :");
-        //scanner.nextLine();
         Exam exam = examManager.getExamByIndex(choice-1);
 
         if(exam == null){
             System.out.println("시험 번호를 다시 확인해 주세요.");
             return;
         }else {
-            //System.out.print("성적을 입력하세요 : ");
             float value = Input.readFloat(scanner,"성적을 입력하세요 : ",0f,4.5f);
-
             Score old = scores.get(exam);
             if(old != null){
                 old.setScore(value);
-            //    System.out.println("성적이 수정되었습니다.");
             }else{
                 scores.put(exam, new Score(exam.getCourseName(), exam, value));
-            //    System.out.println("성적이 등록되었습니다.");
             }
         }
     }
@@ -59,7 +53,6 @@ public class ScoreManager {
     }
 
     public void showGradeByGrade(){//학년 별 보여주기
-        //System.out.print("조회할 성의 학년을 입력해주세요 : ");
         int grade = Input.readInt(scanner,"조회할 성의 학년을 입력해주세요 : ");
 
         List<Score> list = new ArrayList<>(scores.values());
