@@ -12,14 +12,10 @@ public class CourseManager {
     }
 
     public void addCourse() {
-        System.out.print("강의명: ");
-        String courseName = scanner.nextLine();
-        System.out.print("학점: ");
-        float credit = Input.readFloat(scanner,0f,4.5f);
-        System.out.print("학년: ");
-        int grade = Input.readInt(scanner);
-        System.out.print("학기: ");
-        int semester = Input.readInt(scanner,1,2);
+        String courseName = Input.readString(scanner, "강의명 : ");
+        float credit = Input.readFloat(scanner,"학점 : ",0f,4.5f);
+        int grade = Input.readInt(scanner,"학년 : ");
+        int semester = Input.readInt(scanner,"학기 : ", 1,2);
 
         for(Course c : courses){
             if(c.getCourseName().equals(courseName) && c.getGrade()== grade && c.getSemester() == semester){
@@ -28,7 +24,7 @@ public class CourseManager {
             }
         }
         Course course = new Course(courseName, credit, grade, semester);
-        courses.add(course); //ArrayList에 추가하기
+        courses.add(course);
     }
 
     public void showCourses(){
@@ -49,19 +45,8 @@ public class CourseManager {
             return null;
         }
         showCourses();
-        System.out.print("삭제할 강의 번호: ");
-        int index = Input.readInt(scanner) - 1;
-
-        if (index < 0 || index >= courses.size()) {
-            System.out.println("잘못된 번호입니다.");
-            return null;
-        }
-        return courses.remove(index);
-    }
-
-
-    public ArrayList<Course> getCourses(){
-        return courses;
+        int choice = Input.readInt(scanner,"삭제할 강의 번호 : ",1,courses.size());
+        return courses.remove(choice-1);
     }
 
     public Course getCourseByIndex(int index) {
@@ -70,5 +55,10 @@ public class CourseManager {
         }
         return courses.get(index);
     }
+
+    public ArrayList<Course> getCourses(){
+        return courses;
+    }
+
 
 }

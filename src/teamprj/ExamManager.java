@@ -17,15 +17,14 @@ public class ExamManager {
 
     public void addExam() {
         courseManager.showCourses();
-        System.out.print("시험을 등록할 강의 번호 : ");
-        int choice = Input.readInt(scanner);
+        int choice = Input.readInt(scanner,"시험을 등록할 강의 번호 : ");
         Course course = courseManager.getCourseByIndex(choice - 1);
 
         if (course == null) {
             System.out.println("강의 번호를 다시 확인해 주세요.");
             return;
         }
-        int[] date = Ddaycalculate.readDate(scanner, "시험 날짜를 입력하세요 : (ex.11/01)   ");
+        int[] date = Input.readDate(scanner, "시험 날짜를 입력하세요 : (ex.11/01)   ");
         int examMonth = date[0];
         int examDay = date[1];
 
@@ -35,10 +34,8 @@ public class ExamManager {
                 return;
             }
         }
-
         Exam exam = new Exam(course, examMonth, examDay);
         exams.add(exam);
-
     }
 
     public void showExams(int todayMonth, int todayDay) {
@@ -61,14 +58,8 @@ public class ExamManager {
             return null;
         }
         showExams(todayMonth, todayDay);
-        System.out.print("삭제할 시험 번호: ");
-        int index = Input.readInt(scanner) - 1;
-
-        if (index < 0 || index >= exams.size()) {
-            System.out.println("잘못된 번호입니다.");
-            return null;
-        }
-        return exams.remove(index);
+        int choice = Input.readInt(scanner,"삭제할 시험 번호 : ",1,exams.size());
+        return exams.remove(choice-1);
     }
 
     // 만료되어 지워진 시험 목록을 반환
@@ -97,14 +88,14 @@ public class ExamManager {
         return removed;
     }
 
-    public ArrayList<Exam> getExams() {
-        return exams;
-    }
-
     public Exam getExamByIndex(int index) {
         if (index < 0 || index >= exams.size()) {
             return null;
         }
         return exams.get(index);
+    }
+
+    public ArrayList<Exam> getExams() {
+        return exams;
     }
 }

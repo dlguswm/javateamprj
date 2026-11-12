@@ -17,17 +17,15 @@ public class AssignmentManager {
 
     public void addAssignment() {
         courseManager.showCourses();
-        System.out.print("과제를 등록할 강의 번호 : ");
-        int choice = Input.readInt(scanner);
+        int choice = Input.readInt(scanner,"과제를 등록할 강의 번호 : ");
         Course course = courseManager.getCourseByIndex(choice - 1);
-
         if (course == null) {
             System.out.println("강의 번호를 다시 확인해 주세요.");
             return;
         }
-        System.out.print("등록할 과제명을 입력하세요 : ");
-        String title = Input.readString(scanner);
-        int[] due = Ddaycalculate.readDate(scanner, "과제 마감 날짜 : (ex.11/01)   ");
+
+        String title = Input.readString(scanner,"등록할 과제명을 입력하세요 : ");
+        int[] due = Input.readDate(scanner, "과제 마감 날짜 : (ex.11/01)   ");
         int dueMonth = due[0];
         int dueDay = due[1];
 
@@ -37,13 +35,12 @@ public class AssignmentManager {
                 return;
             }
         }
-        System.out.print("제출 여부 : (y or n)   ");
-        String done1 = scanner.nextLine().trim();
-        boolean done2 = done1.equalsIgnoreCase("y");
 
+        boolean done2 = Input.readYesNo(scanner,"제출 여부 : (y/n)");
         Assignment assignment = new Assignment(course, title, dueMonth, dueDay, done2);
         assignments.add(assignment);
     }
+
 
     public void showAssignment(int todayMonth, int todayDay) { //기본은 디데이순으로 할거임
         if (assignments.isEmpty()) {
@@ -80,15 +77,12 @@ public class AssignmentManager {
             return;
         }
         courseManager.showCourses();
-        System.out.print("조회할 강의의 과제 번호 : ");
-        int choice = Input.readInt(scanner);
+        int choice = Input.readInt(scanner, "조회할 강의의 과제 번호 : ");
         Course course = courseManager.getCourseByIndex(choice - 1);
-
         if (course == null) {
             System.out.println("강의 번호를 다시 확인해 주세요");
             return;
         }
-
         boolean found = false;
         for (Assignment assignment : assignments) {
             if (assignment.getCourse() == course) {
@@ -107,13 +101,8 @@ public class AssignmentManager {
             return;
         }
         showAssignment(todayMonth, todayDay);
-        System.out.println("삭제할 과제 번호 : ");
-        int index = Input.readInt(scanner) - 1;
-        if ((index) < 0 || index >= assignments.size()) {
-            System.out.println("잘못된 번호입니다.");
-            return;
-        }
-        Assignment assignment = assignments.remove(index);
+        int choice = Input.readInt(scanner,"삭제할 과제 번호 : ",1,assignments.size());
+        assignments.remove(choice-1);
     }
 
     public void updateDone(int todayMonth, int todayDay) {  //과제 제출여부 수정할 때
@@ -122,21 +111,10 @@ public class AssignmentManager {
             return;
         }
         showAssignment(todayMonth, todayDay);
-        System.out.print("제출 여부를 변경할 과제 번호 : ");
-        int choice = Input.readInt(scanner,1,assignments.size());
-
+        int choice = Input.readInt(scanner,"제출 여부를 변경할 과제 번호 : ",1,assignments.size());
         Assignment assignment = assignments.get(choice - 1);
-        System.out.print("제출 완료했나요? (y/n) :  ");
-        String input = scanner.nextLine();
-
-        if (input.equalsIgnoreCase("y")) {
-            assignment.setDone(true);
-        } else if (input.equalsIgnoreCase("n")) {
-            assignment.setDone(false);
-        } else {
-            System.out.println("잘못된 입력입니다.");
-            return;
-        }
+        boolean done = Input.readYesNo(scanner,"제출 완료했나요? (y/n)");
+        assignment.setDone(done);
     }
 
     public void removeByCourse(Course course){
@@ -148,7 +126,6 @@ public class AssignmentManager {
         while (it.hasNext()) {
             Assignment a = it.next();
             if (a.getDday(todayMonth, todayDay) <= -7) {
-                //    System.out.println("[자동삭제] " + a);
                 it.remove();
             }
         }

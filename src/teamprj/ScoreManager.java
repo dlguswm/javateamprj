@@ -18,8 +18,8 @@ public class ScoreManager {
     public void addGrades(int todayMonth, int todayDay){
         showGrade();
         examManager.showExams(todayMonth, todayDay);
-        System.out.print("성적을 입력/수정 할 시험 번호 : ");
-        int choice = Input.readInt(scanner);
+        //System.out.print("성적을 입력/수정 할 시험 번호 : ");
+        int choice = Input.readInt(scanner,"성적을 입력/수정 할 시험 번호 :");
         //scanner.nextLine();
         Exam exam = examManager.getExamByIndex(choice-1);
 
@@ -27,8 +27,8 @@ public class ScoreManager {
             System.out.println("시험 번호를 다시 확인해 주세요.");
             return;
         }else {
-            System.out.print("성적을 입력하세요 : ");
-            float value = Input.readFloat(scanner,0f,4.5f);
+            //System.out.print("성적을 입력하세요 : ");
+            float value = Input.readFloat(scanner,"성적을 입력하세요 : ",0f,4.5f);
 
             Score old = scores.get(exam);
             if(old != null){
@@ -59,8 +59,8 @@ public class ScoreManager {
     }
 
     public void showGradeByGrade(){//학년 별 보여주기
-        System.out.print("조회할 성의 학년을 입력해주세요 : ");
-        int grade = Input.readInt(scanner);
+        //System.out.print("조회할 성의 학년을 입력해주세요 : ");
+        int grade = Input.readInt(scanner,"조회할 성의 학년을 입력해주세요 : ");
 
         List<Score> list = new ArrayList<>(scores.values());
         for (Score score : scores.values()) {
@@ -83,11 +83,8 @@ public class ScoreManager {
     }
 
     public void showGradeBySemester() { // 학년+학기 별 보여주기 + 해당 학기 평점평균
-        System.out.print("조회할 성적의 학년을 입력해주세요 : ");
-        int grade = Input.readInt(scanner);
-        System.out.print("조회할 성적의 학기를 입력해주세요 : ");
-        int semester = Input.readInt(scanner,1,2);
-        //scanner.nextLine();
+        int grade = Input.readInt(scanner,"조회할 성적의 학년을 입력해주세요 : ");
+        int semester = Input.readInt(scanner,"조회할 성적의 학기를 입력해주세요 : ",1,2);
 
         List<Score> list = new ArrayList<>();
         for (Score score : scores.values()) {
@@ -95,7 +92,6 @@ public class ScoreManager {
                 list.add(score);
             }
         }
-
         if (list.isEmpty()) {
             System.out.println("해당 학기에 등록된 성적이 없습니다.");
             return;
