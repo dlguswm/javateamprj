@@ -36,7 +36,12 @@ public class Score {
         return exam.getSemester();
     }
 
-
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+    public void setExam(Exam exam) {
+        this.exam = exam;
+    }
 
     @Override
     public String toString() {

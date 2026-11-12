@@ -23,31 +23,39 @@ public class Assignment {
         return course;
     }
 
+    public void setDone(boolean done) {
+        this.done = done;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
+    }
     public String getTitle() {
         return title;
     }
-
+    public void setTitle(String title) {
+        this.title = title;
+    }
     public int getDueMonth() {
         return dueMonth;
     }
-
+    public void setDueMonth(int dueMonth) {
+        this.dueMonth = dueMonth;
+    }
     public int getDueDay() {
         return dueDay;
     }
-
+    public void setDueDay(int dueDay) {
+        this.dueDay = dueDay;
+    }
     public boolean isDone() {
         return done;
-    }
-
-
-    public void setDone(boolean done) {
-        this.done = done;
     }
 
     @Override
     public String toString() {
         if (done == true) {
-            return "[" + course.getCourseName() + "] " + title + " | 제출완료 ** | ";
+            return "[" + course.getCourseName() + "] " + title + " | 제출완료 | ";
         }else{
             return "[" + course.getCourseName() + "] " + title + " | 제출미완료 | ";
             // 나중에 매니저에서 뒤에 디데이 붙여서 출력하기

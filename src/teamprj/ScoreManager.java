@@ -53,16 +53,16 @@ public class ScoreManager {
     }
 
     public void showGradeByGrade(){//학년 별 보여주기
-        int grade = Input.readInt(scanner,"조회할 성의 학년을 입력해주세요 : ");
+        int grade = Input.readInt(scanner,"조회할 성적의 학년을 입력해주세요 : ");
 
-        List<Score> list = new ArrayList<>(scores.values());
+        List<Score> list = new ArrayList<>();
         for (Score score : scores.values()) {
             if (score.getGrade() == grade) {
                 list.add(score);
             }
         }
         if(list.isEmpty()){
-            System.out.println("학년에 둥록된 성적이 없습니다.");
+            System.out.println("학년에 등록된 성적이 없습니다.");
             return;
         }
 
@@ -100,17 +100,17 @@ public class ScoreManager {
 
     private double calcGpa(List<Score> list){
         double sum =0;
-        float totalCredit =0;
+        int totalCredit =0;
         for(Score s : list){
-            float credit = s.getExam().getCredit();
+            int credit = s.getExam().getCredit();
             sum += credit*s.getScore();
             totalCredit += credit;
         }
         return totalCredit ==0 ? 0 : sum/totalCredit;
     }
 
-    private float calcTotalCredit(List<Score> list){
-        float total =0;
+    private int calcTotalCredit(List<Score> list){
+        int total =0;
         for(Score s : list){
             total += s.getExam().getCredit();
         }
@@ -118,7 +118,7 @@ public class ScoreManager {
     }
 
     private void printGpa(List<Score> list){
-        System.out.printf("총 %.1f학점 | 평점평균 : %.2f%n",calcTotalCredit(list), calcGpa(list));
+        System.out.printf("총 %d학점 | 평점평균 : %.2f%n",calcTotalCredit(list), calcGpa(list));
     }
 
     public void removeScores(List<Exam> removedExams) {

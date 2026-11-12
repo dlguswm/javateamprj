@@ -99,7 +99,7 @@ public class TestMain {
                             case 2 -> {
                                 Exam removed = examManager.deleteExam(todayMonth,todayDay);
                                 if(removed !=null){
-                                scoreManager.removeScores(List.of(removed));}
+                                    scoreManager.removeScores(List.of(removed));}
                             }
                             default -> System.out.println("잘못된 입력입니다.");
                         }

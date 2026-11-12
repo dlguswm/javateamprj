@@ -29,7 +29,7 @@ public class DataManager {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
                 if (parts.length == 4) {
-                    Course course = new Course(parts[0], Float.parseFloat(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
+                    Course course = new Course(parts[0], Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
                     cm.getCourses().add(course);
                 }
             }
@@ -140,7 +140,7 @@ public class DataManager {
     private void saveAssignments(AssignmentManager am) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(ASSIGNMENT_FILE))) {
             for (Assignment a : am.getAssignments()) {
-                writer.println(a.getCourse().getCourseName() + "," + getTitle(a) + "," + getDueMonth(a) + "," + getDueDay(a) + "," + isDone(a));
+                writer.println(a.getCourse().getCourseName() + "," + a.getTitle() + "," + a.getDueMonth() + "," + a.getDueDay() + "," + a.isDone());
             }
         } catch (IOException e) {
             System.out.println("[오류] 과제 저장 실패: " + e.getMessage());
@@ -185,38 +185,5 @@ public class DataManager {
             }
         }
         return null;
-    }
-
-    // Reflection을 활용해 Assignment의 private 필드 가져오기 보조
-    private String getTitle(Assignment a) {
-        try {
-            var field = Assignment.class.getDeclaredField("title");
-            field.setAccessible(true);
-            return (String) field.get(a);
-        } catch (Exception e) { return ""; }
-    }
-
-    private int getDueMonth(Assignment a) {
-        try {
-            var field = Assignment.class.getDeclaredField("dueMonth");
-            field.setAccessible(true);
-            return (int) field.get(a);
-        } catch (Exception e) { return 0; }
-    }
-
-    private int getDueDay(Assignment a) {
-        try {
-            var field = Assignment.class.getDeclaredField("dueDay");
-            field.setAccessible(true);
-            return (int) field.get(a);
-        } catch (Exception e) { return 0; }
-    }
-
-    private boolean isDone(Assignment a) {
-        try {
-            var field = Assignment.class.getDeclaredField("done");
-            field.setAccessible(true);
-            return (boolean) field.get(a);
-        } catch (Exception e) { return false; }
     }
 }

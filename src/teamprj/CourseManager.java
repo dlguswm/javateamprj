@@ -13,7 +13,7 @@ public class CourseManager {
 
     public void addCourse() {
         String courseName = Input.readString(scanner, "강의명 : ");
-        float credit = Input.readFloat(scanner,"학점 : ",0f,4.5f);
+        int credit = Input.readInt(scanner,"학점 : ");
         int grade = Input.readInt(scanner,"학년 : ");
         int semester = Input.readInt(scanner,"학기 : ", 1,2);
 
@@ -33,8 +33,10 @@ public class CourseManager {
             return;
         }else{
             System.out.println("------- 강의 목록 -------");
-            for(int i =0; i< courses.size(); i++){
-                System.out.println((i+1)+"."+courses.get(i)); //얘도 포이치로 바ㅜ꺼라
+            int count = 1;
+            for(Course c : courses){
+                System.out.println(count + "." + c);
+                count++;
             }
         }
     }
