@@ -25,8 +25,6 @@ public class TestMain {
         int todayDay = today[1];
 
         assignmentManager.removeExpiredAssignment(todayMonth, todayDay);
-        List<Exam> expired = examManager.removeExpiredExam(todayMonth, todayDay);
-        scoreManager.removeScores(expired);
 
         int choice =0;
 
@@ -34,7 +32,6 @@ public class TestMain {
             System.out.println("=========== 7조 메뉴 ===========");
 
             System.out.println("1)강의관리 2)과제관리 3)시험관리 4)학점관리 5)종료");
-            //System.out.print("메뉴 선택 : ");
             choice = Input.readInt(scanner,"메뉴 선택 : ",1,5);
 
             switch(choice){
@@ -43,7 +40,6 @@ public class TestMain {
                         System.out.println("======= 강의 관리 =======");
                         courseManager.showCourses();
                         System.out.println("1)강의추가 2)강의삭제 3)메인메뉴로돌아가기");
-                        //System.out.print("메뉴 선택 : ");
                         int choice2 = Input.readInt(scanner,"메뉴 선택 : ",1,3);
                         if(choice2 == 3){
                             break;
@@ -68,7 +64,6 @@ public class TestMain {
                         System.out.println("======= 과제 관리 =======");
                         assignmentManager.showAssignment(todayMonth,todayDay);
                         System.out.println("1)과제추가 2)과제삭제 3)제출완료 4)강의별과제보기 5)메인메뉴로돌아가기");
-                        //System.out.print("메뉴 선택 : ");
                         int choice2 = Input.readInt(scanner,"메뉴 선택 : ",1,5);
                         if(choice2 ==5){
                             break;
@@ -88,7 +83,6 @@ public class TestMain {
                         System.out.println("======= 시험 관리 =======");
                         examManager.showExams(todayMonth, todayDay);
                         System.out.println("1)시험추가 2)시험삭제 3)메인메뉴로돌아가기");
-                        //System.out.print("메뉴 선택 : ");
                         int choice2 = Input.readInt(scanner,"메뉴 선택 : ",1,3);
 
                         if(choice2 ==3 ){
@@ -99,7 +93,7 @@ public class TestMain {
                             case 2 -> {
                                 Exam removed = examManager.deleteExam(todayMonth,todayDay);
                                 if(removed !=null){
-                                    scoreManager.removeScores(List.of(removed));}
+                                scoreManager.removeScores(List.of(removed));}
                             }
                             default -> System.out.println("잘못된 입력입니다.");
                         }
@@ -111,7 +105,6 @@ public class TestMain {
                         System.out.println("======학점 관리======");
                         scoreManager.showGrade();
                         System.out.println("1)성적 입력/수정 2)학년별학점보기 3)학기별학점보기 4)메인메뉴로돌아가기");
-                        //System.out.print("메뉴 선택 : ");기
                         int choice2 = Input.readInt(scanner,"메뉴 선택 : ",1,4);
 
                         if (choice2 == 4) {
