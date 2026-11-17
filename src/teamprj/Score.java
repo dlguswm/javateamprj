@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 public class Score {
     private String courseName;
+    //얘는 나중에 ScoreManager에서 ExamManager에 있는 getCourseNamge으로 받아올 거적
     private Exam exam;
     private float score;
 
@@ -35,6 +36,12 @@ public class Score {
         return exam.getSemester();
     }
 
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
+    }
+    public void setExam(Exam exam) {
+        this.exam = exam;
+    }
 
     @Override
     public String toString() {

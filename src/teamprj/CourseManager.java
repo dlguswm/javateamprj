@@ -47,9 +47,10 @@ public class CourseManager {
             return null;
         }
         showCourses();
-        int choice = Input.readInt(scanner,"삭제할 강의 번호 : ",1,courses.size());
-        return courses.remove(choice-1);
+        int choice = Input.readInt(scanner, "삭제할 강의 번호 : ", 1, courses.size());
+        return courses.remove(choice - 1);
     }
+
 
     public Course getCourseByIndex(int index) {
         if (index < 0 || index >= courses.size()) {

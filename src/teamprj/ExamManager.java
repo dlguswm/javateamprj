@@ -62,19 +62,19 @@ public class ExamManager {
         return exams.remove(choice-1);
     }
 
-    // 만료되어 지워진 시험 목록을 반환
-    //public List<Exam> removeExpiredExam(int todayMonth, int todayDay) {
-    //    List<Exam> removed = new ArrayList<>();
-    //    Iterator<Exam> it = exams.iterator();
-    //    while (it.hasNext()) {
-    //        Exam e = it.next();
-    //        if (e.getDday(todayMonth, todayDay) <= -1) {
-    //            removed.add(e);
-    //            it.remove();
-    //        }
-    //    }
-    //    return removed;
-   // }
+//    // 만료되어 지워진 시험 목록을 반환
+//    public List<Exam> removeExpiredExam(int todayMonth, int todayDay) {
+//        List<Exam> removed = new ArrayList<>();
+//        Iterator<Exam> it = exams.iterator();
+//        while (it.hasNext()) {
+//            Exam e = it.next();
+//            if (e.getDday(todayMonth, todayDay) <= -1) {
+//                removed.add(e);
+//                it.remove();
+//            }
+//        }
+//        return removed;
+//    }
 
     // 강의 삭제 시 해당 강의의 시험 삭제 + 지워진 시험 반환
     public List<Exam> removeByCourse(Course course) {
