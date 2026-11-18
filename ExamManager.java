@@ -42,13 +42,14 @@ public class ExamManager {
         if (exams.isEmpty()) {
             System.out.println("등록된 시험이 없습니다.");
             return;
-        } else {
-            System.out.println("------ 시험 목록 ------");
-            int num = 1;
-            for (Exam exam : exams) {
-                System.out.println(num + "." + exam + Ddaycalculate.Dday(exam.getDday(todayMonth, todayDay)));
-                num++;
-            }
+        }
+        System.out.println("------ 시험 목록 ------");
+        int num = 1;
+        for (Exam exam : exams) {
+            int dday = exam.getDday(todayMonth, todayDay);
+            String status = (dday <= 0) ? " [응시완료]" : " [예정]";
+            System.out.println(num + "." + exam + Ddaycalculate.Dday(dday) + status);
+            num++;
         }
     }
 
@@ -93,6 +94,17 @@ public class ExamManager {
             return null;
         }
         return exams.get(index);
+    }
+
+    public List<Exam> getPastExams(int todayMonth, int todayDay) {
+        List<Exam> pastExams = new ArrayList<>();
+        for (Exam e : exams) {
+            // D-Day가 0(오늘)이거나 음수(D+1, D+2... 이미 지난 시험)인 경우만 포함
+            if (e.getDday(todayMonth, todayDay) <= 0) {
+                pastExams.add(e);
+            }
+        }
+        return pastExams;
     }
 
     public ArrayList<Exam> getExams() {

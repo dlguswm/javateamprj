@@ -15,23 +15,32 @@ public class ScoreManager {
         this.scanner = scanner;
     }
 
-    public void addGrades(int todayMonth, int todayDay){
+    public void addGrades(int todayMonth, int todayDay) {
         showGrade();
-        examManager.showExams(todayMonth, todayDay);
-        int choice = Input.readInt(scanner,"성적을 입력/수정 할 시험 번호 :");
-        Exam exam = examManager.getExamByIndex(choice-1);
+        List<Exam> pastExams = examManager.getPastExams(todayMonth, todayDay);
 
-        if(exam == null){
-            System.out.println("시험 번호를 다시 확인해 주세요.");
+        if (pastExams.isEmpty()) {
+            System.out.println("성적을 입력할 수 있는(이미 치른) 시험이 없습니다.");
             return;
-        }else {
-            float value = Input.readFloat(scanner,"성적을 입력하세요 : ",0f,4.5f);
-            Score old = scores.get(exam);
-            if(old != null){
-                old.setScore(value);
-            }else{
-                scores.put(exam, new Score(exam.getCourseName(), exam, value));
-            }
+        }
+
+        System.out.println("------ 성적 입력 가능한 시험 목록 ------");
+        for (int i = 0; i < pastExams.size(); i++) {
+            Exam e = pastExams.get(i);
+            System.out.println((i + 1) + "." + e + Ddaycalculate.Dday(e.getDday(todayMonth, todayDay)));
+        }
+
+        int choice = Input.readInt(scanner, "성적을 입력/수정 할 시험 번호 : ", 1, pastExams.size());
+        Exam exam = pastExams.get(choice - 1);
+
+        float value = Input.readFloat(scanner, "성적을 입력하세요 (0.0 ~ 4.5) : ", 0f, 4.5f);
+        Score old = scores.get(exam);
+        if (old != null) {
+            old.setScore(value);
+            System.out.println("성적이 수정되었습니다.");
+        } else {
+            scores.put(exam, new Score(exam.getCourseName(), exam, value));
+            System.out.println("성적이 등록되었습니다.");
         }
     }
 
@@ -47,7 +56,7 @@ public class ScoreManager {
             System.out.println(num + "." + score);
             num++;
         }
-        System.out.print("[총 학점} : ");
+        System.out.print("[총 학점] : ");
         printGpa(list);
 
     }
