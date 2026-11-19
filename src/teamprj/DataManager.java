@@ -16,7 +16,7 @@ public class DataManager {
         loadCourses(cm);
         loadAssignments(am, cm);
         loadExams(em, cm);
-        loadScores(sm, em);
+        loadScores(sm, cm);
         System.out.println("[System] 이전 저장된 모든 데이터(강의/과제/시험/성적)를 불러왔습니다.");
     }
 
@@ -90,7 +90,7 @@ public class DataManager {
         }
     }
 
-    private void loadScores(ScoreManager sm, ExamManager em) {
+    private void loadScores(ScoreManager sm, CourseManager cm) {
         File file = new File(SCORE_FILE);
         if (!file.exists()) return;
 
@@ -100,14 +100,13 @@ public class DataManager {
                 String[] parts = line.split(",");
                 if (parts.length == 4) {
                     String courseName = parts[0];
-                    int examMonth = Integer.parseInt(parts[1]);
-                    int examDay = Integer.parseInt(parts[2]);
+                    int grade = Integer.parseInt(parts[1]);
+                    int semester = Integer.parseInt(parts[2]);
                     float scoreValue = Float.parseFloat(parts[3]);
 
-                    Exam exam = findExam(em, courseName, examMonth, examDay);
-                    if (exam != null) {
-                        Score score = new Score(courseName, exam, scoreValue);
-                        sm.getScores().put(exam, score);
+                    Course course = findCourse(cm, courseName, grade, semester);
+                    if (course != null) {
+                        sm.getScores().put(course, new Score(course, scoreValue));
                     }
                 }
             }
@@ -159,10 +158,9 @@ public class DataManager {
 
     private void saveScores(ScoreManager sm) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(SCORE_FILE))) {
-            for (Map.Entry<Exam, Score> entry : sm.getScores().entrySet()) {
-                Exam exam = entry.getKey();
-                Score score = entry.getValue();
-                writer.println(exam.getCourse().getCourseName() + "," + exam.getExamMonth() + "," + exam.getExamDay() + "," + score.getScore());
+            for (Score s : sm.getScores().values()) {
+                Course c = s.getCourse();
+                writer.println(c.getCourseName() + "," + c.getGrade() + "," + c.getSemester() + "," + s.getScore());
             }
         } catch (IOException e) {
             System.out.println("[오류] 성적 저장 실패: " + e.getMessage());
@@ -173,6 +171,14 @@ public class DataManager {
     private Course findCourseByName(CourseManager cm, String name) {
         for (Course c : cm.getCourses()) {
             if (c.getCourseName().equals(name)) return c;
+        }
+        return null;
+    }
+
+    // 헬퍼 메서드: 강의 이름+학년+학기로 찾기
+    private Course findCourse(CourseManager cm, String name, int grade, int semester) {
+        for (Course c : cm.getCourses()) {
+            if (c.getCourseName().equals(name) && c.getGrade() == grade && c.getSemester() == semester) return c;
         }
         return null;
     }

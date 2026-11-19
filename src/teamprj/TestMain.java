@@ -42,10 +42,10 @@ public class TestMain {
                     while (true) {
                         System.out.println("======= 강의 관리 =======");
                         courseManager.showCourses();
-                        System.out.println("1)강의추가 2)강의삭제 3)메인메뉴로돌아가기");
+                        System.out.println("1)강의추가 2)강의삭제 3)강의수정 4)메인메뉴로돌아가기");
                         //System.out.print("메뉴 선택 : ");
-                        int choice2 = Input.readInt(scanner,"메뉴 선택 : ",1,3);
-                        if(choice2 == 3){
+                        int choice2 = Input.readInt(scanner,"메뉴 선택 : ",1,4);
+                        if(choice2 == 4){
                             break;
                         }
                         switch (choice2) {
@@ -54,10 +54,11 @@ public class TestMain {
                                 Course removed = courseManager.deleteCourse();
                                 if(removed != null){
                                     assignmentManager.removeByCourse(removed);
-                                    List<Exam> removedExams = examManager.removeByCourse(removed);
-                                    scoreManager.removeScores(removedExams);
+                                    examManager.removeByCourse(removed);
+                                    scoreManager.removeScore(removed);
                                 }
                             }
+                            case 3 -> courseManager.updateCourse();
                             default -> System.out.println("잘못된 입력입니다.");
                         }
                     }
@@ -67,10 +68,10 @@ public class TestMain {
                     while(true){
                         System.out.println("======= 과제 관리 =======");
                         assignmentManager.showAssignment(todayMonth,todayDay);
-                        System.out.println("1)과제추가 2)과제삭제 3)제출완료 4)강의별과제보기 5)메인메뉴로돌아가기");
+                        System.out.println("1)과제추가 2)과제삭제 3)제출완료 4)강의별과제보기 5)과제수정 6)메인메뉴로돌아가기");
                         //System.out.print("메뉴 선택 : ");
-                        int choice2 = Input.readInt(scanner,"메뉴 선택 : ",1,5);
-                        if(choice2 ==5){
+                        int choice2 = Input.readInt(scanner,"메뉴 선택 : ",1,6);
+                        if(choice2 ==6){
                             break;
                         }
                         switch (choice2){
@@ -78,6 +79,7 @@ public class TestMain {
                             case 2 -> assignmentManager.deleteAssignment(todayMonth,todayDay);
                             case 3 -> assignmentManager.updateDone(todayMonth,todayDay);
                             case 4 -> assignmentManager.showAssignmentByCourse(todayMonth,todayDay);
+                            case 5 -> assignmentManager.updateAssignment(todayMonth,todayDay);
                             default -> System.out.println("잘못된 입력입니다.");
                         }
                     }
@@ -87,20 +89,17 @@ public class TestMain {
                     while(true){
                         System.out.println("======= 시험 관리 =======");
                         examManager.showExams(todayMonth, todayDay);
-                        System.out.println("1)시험추가 2)시험삭제 3)메인메뉴로돌아가기");
+                        System.out.println("1)시험추가 2)시험삭제 3)시험수정 4)메인메뉴로돌아가기");
                         //System.out.print("메뉴 선택 : ");
-                        int choice2 = Input.readInt(scanner,"메뉴 선택 : ",1,3);
+                        int choice2 = Input.readInt(scanner,"메뉴 선택 : ",1,4);
 
-                        if(choice2 ==3 ){
+                        if(choice2 ==4){
                             break;
                         }
                         switch (choice2){
                             case 1 -> examManager.addExam();
-                            case 2 -> {
-                                Exam removed = examManager.deleteExam(todayMonth,todayDay);
-                                if(removed !=null){
-                                    scoreManager.removeScores(List.of(removed));}
-                            }
+                            case 2 -> examManager.deleteExam(todayMonth,todayDay);
+                            case 3 -> examManager.updateExam(todayMonth,todayDay);
                             default -> System.out.println("잘못된 입력입니다.");
                         }
                     }
@@ -111,14 +110,14 @@ public class TestMain {
                         System.out.println("======학점 관리======");
                         scoreManager.showGrade();
                         System.out.println("1)성적 입력/수정 2)학년별학점보기 3)학기별학점보기 4)메인메뉴로돌아가기");
-                        //System.out.print("메뉴 선택 : ");기
+                        //System.out.print("메뉴 선택 : ");
                         int choice2 = Input.readInt(scanner,"메뉴 선택 : ",1,4);
 
                         if (choice2 == 4) {
                             break;
                         }
                         switch (choice2) {
-                            case 1 -> scoreManager.addGrades(todayMonth, todayDay);
+                            case 1 -> scoreManager.addGrades(todayMonth,todayDay);
                             case 2 -> scoreManager.showGradeByGrade();
                             case 3 -> scoreManager.showGradeBySemester();
                         }

@@ -81,7 +81,7 @@ public class Input {
             try {
                 int month = Integer.parseInt(parts[0].trim());
                 int day = Integer.parseInt(parts[1].trim());
-                if (Ddaycalculate.ValidDate(month, day)) {
+                if (DdayCalculate.ValidDate(month, day)) {
                     return new int[]{month, day};
                 }
                 System.out.println("존재하지 않는 날짜입니다.");

@@ -22,7 +22,7 @@ public class Exam {
     }
 
     public int getDday(int todayMonth, int todayDay) {
-        return Ddaycalculate.calcDday(examMonth, examDay,todayMonth, todayDay);
+        return DdayCalculate.calcDday(examMonth, examDay,todayMonth, todayDay);
     }//Ddaycalculate 클래스의 calcDday 메서드를 사용해서 디데이계산. 현재 날짜는 나중에 메인에서 입력받을거임
 
     /////////////////////////////////////

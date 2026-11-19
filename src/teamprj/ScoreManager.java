@@ -2,11 +2,12 @@ package teamprj;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Scanner;
 
 public class ScoreManager {
-    private LinkedHashMap<Exam, Score> scores = new LinkedHashMap<>();
+    private LinkedHashMap<Course, Score> scores = new LinkedHashMap<>();
     private ExamManager examManager;
     private final Scanner scanner;
 
@@ -15,23 +16,32 @@ public class ScoreManager {
         this.scanner = scanner;
     }
 
-    public void addGrades(int todayMonth, int todayDay){
-        showGrade();
-        examManager.showExams(todayMonth, todayDay);
-        int choice = Input.readInt(scanner,"성적을 입력/수정 할 시험 번호 :");
-        Exam exam = examManager.getExamByIndex(choice-1);
-
-        if(exam == null){
-            System.out.println("시험 번호를 다시 확인해 주세요.");
+    public void addGrades(int todayMonth, int todayDay) {
+        // 이미 시험을 본 강의만, 중복 없이 모으기
+        LinkedHashSet<Course> courseSet = new LinkedHashSet<>();
+        for (Exam e : examManager.getPastExams(todayMonth, todayDay)) {
+            courseSet.add(e.getCourse());
+        }
+        if (courseSet.isEmpty()) {
+            System.out.println("성적을 입력할 수 있는(이미 시험을 치른) 강의가 없습니다.");
             return;
-        }else {
-            float value = Input.readFloat(scanner,"성적을 입력하세요 : ",0f,4.5f);
-            Score old = scores.get(exam);
-            if(old != null){
-                old.setScore(value);
-            }else{
-                scores.put(exam, new Score(exam.getCourseName(), exam, value));
-            }
+        }
+        List<Course> list = new ArrayList<>(courseSet);
+        System.out.println("------ 성적 입력 가능한 강의 목록 ------");
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println((i + 1) + "." + list.get(i));
+        }
+        int choice = Input.readInt(scanner, "성적을 입력/수정 할 강의 번호 : ", 1, list.size());
+        Course course = list.get(choice - 1);
+
+        float value = Input.readFloat(scanner, "성적을 입력하세요 (0.0 ~ 4.5) : ", 0f, 4.5f);
+        Score old = scores.get(course);
+        if (old != null) {
+            old.setScore(value);
+            System.out.println("성적이 수정되었습니다.");
+        } else {
+            scores.put(course, new Score(course, value));
+            System.out.println("성적이 등록되었습니다.");
         }
     }
 
@@ -47,7 +57,7 @@ public class ScoreManager {
             System.out.println(num + "." + score);
             num++;
         }
-        System.out.print("[총 학점} : ");
+        System.out.print("[총 학점] : ");
         printGpa(list);
 
     }
@@ -102,7 +112,7 @@ public class ScoreManager {
         double sum =0;
         int totalCredit =0;
         for(Score s : list){
-            int credit = s.getExam().getCredit();
+            int credit = s.getCredit();
             sum += credit*s.getScore();
             totalCredit += credit;
         }
@@ -112,7 +122,7 @@ public class ScoreManager {
     private int calcTotalCredit(List<Score> list){
         int total =0;
         for(Score s : list){
-            total += s.getExam().getCredit();
+            total += s.getCredit();
         }
         return total;
     }
@@ -121,13 +131,11 @@ public class ScoreManager {
         System.out.printf("총 %d학점 | 평점평균 : %.2f%n",calcTotalCredit(list), calcGpa(list));
     }
 
-    public void removeScores(List<Exam> removedExams) {
-        for (Exam e : removedExams) {
-            scores.remove(e);
-        }
-    }
+public void removeScore(Course course) {
+    scores.remove(course);
+}
 
-    public LinkedHashMap<Exam, Score> getScores() {
+public LinkedHashMap<Course, Score> getScores() {
         return scores;
     }
 }

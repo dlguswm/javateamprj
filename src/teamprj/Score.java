@@ -1,25 +1,19 @@
 package teamprj;
 
-import java.util.ArrayList;
-
 public class Score {
-    private String courseName;
-    //얘는 나중에 ScoreManager에서 ExamManager에 있는 getCourseNamge으로 받아올 거적
-    private Exam exam;
+    private Course course;
     private float score;
 
-    public Score(String courseName, Exam exam, float score) {
-        this.courseName = courseName;
-        this.exam = exam;
+    public Score(Course course, float score) {
+        this.course = course;
         this.score = score;
     }
 
-    public String getCourseName() {
-        return courseName;
-    }
-    public Exam getExam() {
-        return exam;
-    }
+    public Course getCourse() { return course; }
+    public int getCredit() { return course.getCredit(); }
+    public int getGrade() { return course.getGrade(); }
+    public int getSemester() { return course.getSemester(); }
+
     public float getScore() {
         return score;
     }
@@ -28,25 +22,10 @@ public class Score {
         this.score = score;
     }
 
-    public int getGrade(){
-        return exam.getGrade();
-    }
-
-    public int getSemester(){
-        return exam.getSemester();
-    }
-
-    public void setCourseName(String courseName) {
-        this.courseName = courseName;
-    }
-    public void setExam(Exam exam) {
-        this.exam = exam;
-    }
-
     @Override
     public String toString() {
-        return "[" +exam.getCourseName()+"] | "+exam.getGrade()+"학년 "+exam.getSemester()+"학기 |"
-                +exam.getCredit()+"학점 | 받은 성적 : "+score;
+        return "[" + course.getCourseName() + "] | " + course.getGrade() + "학년 " + course.getSemester() + "학기 | "
+                + course.getCredit() + "학점 | 받은 성적 : " + score;
     }
 
 }

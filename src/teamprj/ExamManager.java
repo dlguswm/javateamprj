@@ -1,7 +1,6 @@
 package teamprj;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Scanner;
 
@@ -46,7 +45,9 @@ public class ExamManager {
             System.out.println("------ 시험 목록 ------");
             int num = 1;
             for (Exam exam : exams) {
-                System.out.println(num + "." + exam + Ddaycalculate.Dday(exam.getDday(todayMonth, todayDay)));
+                int dday = exam.getDday(todayMonth, todayDay);
+                String status = (dday <= 0) ? " [응시완료]" : " [예정]";
+                System.out.println(num + "." + exam + DdayCalculate.Dday(dday) + status);
                 num++;
             }
         }
@@ -60,6 +61,31 @@ public class ExamManager {
         showExams(todayMonth, todayDay);
         int choice = Input.readInt(scanner,"삭제할 시험 번호 : ",1,exams.size());
         return exams.remove(choice-1);
+    }
+
+
+    public void updateExam(int todayMonth, int todayDay) {
+        if (exams.isEmpty()) {
+            System.out.println("등록된 시험이 없습니다.");
+            return;
+        }
+        showExams(todayMonth, todayDay);
+        int choice = Input.readInt(scanner, "수정할 시험 번호 : ", 1, exams.size());
+        Exam exam = exams.get(choice - 1);
+
+        System.out.println("현재 정보 : " + exam);
+        int[] date = Input.readDate(scanner, "새 시험 날짜 : (ex.11/01)   ");
+
+        for (Exam e : exams) {
+            if (e != exam && e.getCourse() == exam.getCourse()
+                    && e.getExamMonth() == date[0] && e.getExamDay() == date[1]) {
+                System.out.println("이미 같은 날짜의 시험이 등록되어 있습니다.");
+                return;
+            }
+        }
+        exam.setExamMonth(date[0]);
+        exam.setExamDay(date[1]);
+        System.out.println("시험 날짜가 수정되었습니다.");
     }
 
 //    // 만료되어 지워진 시험 목록을 반환
@@ -93,6 +119,16 @@ public class ExamManager {
             return null;
         }
         return exams.get(index);
+    }
+
+    public List<Exam> getPastExams(int todayMonth, int todayDay) {   // 이미 본 시험 모으기
+        List<Exam> pastExams = new ArrayList<>();
+        for (Exam e : exams) {
+            if (e.getDday(todayMonth, todayDay) <= 0) {
+                pastExams.add(e);
+            }
+        }
+        return pastExams;
     }
 
     public ArrayList<Exam> getExams() {

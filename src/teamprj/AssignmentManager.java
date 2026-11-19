@@ -1,6 +1,5 @@
 package teamprj;
 
-import javax.imageio.stream.IIOByteBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -52,7 +51,7 @@ public class AssignmentManager {
 
         int num = 1;
         for (Assignment assignment : assignments) {
-            System.out.println(num + "." + assignment + Ddaycalculate.Dday(assignment.getDday(todayMonth, todayDay)));
+            System.out.println(num + "." + assignment + DdayCalculate.Dday(assignment.getDday(todayMonth, todayDay)));
             num++;
         }
     }
@@ -86,7 +85,7 @@ public class AssignmentManager {
         boolean found = false;
         for (Assignment assignment : assignments) {
             if (assignment.getCourse() == course) {
-                System.out.println(assignment + Ddaycalculate.Dday(assignment.getDday(todayMonth, todayDay)));
+                System.out.println(assignment + DdayCalculate.Dday(assignment.getDday(todayMonth, todayDay)));
                 found = true;
             }
         }
@@ -115,6 +114,33 @@ public class AssignmentManager {
         Assignment assignment = assignments.get(choice - 1);
         boolean done = Input.readYesNo(scanner,"제출 완료했나요? (y/n)");
         assignment.setDone(done);
+    }
+
+
+    public void updateAssignment(int todayMonth, int todayDay) {
+        if (assignments.isEmpty()) {
+            System.out.println("등록된 과제가 없습니다.");
+            return;
+        }
+        showAssignment(todayMonth, todayDay);
+        int choice = Input.readInt(scanner, "수정할 과제 번호 : ", 1, assignments.size());
+        Assignment assignment = assignments.get(choice - 1);
+
+        System.out.println("현재 정보 : " + assignment + assignment.getDueMonth() + "/" + assignment.getDueDay());
+        String title = Input.readString(scanner, "새 과제명 : ");
+        int[] due = Input.readDate(scanner, "새 마감 날짜 : (ex.11/01)   ");
+
+        for (Assignment a : assignments) {
+            if (a != assignment && a.getCourse() == assignment.getCourse()
+                    && a.getDueMonth() == due[0] && a.getDueDay() == due[1]) {
+                System.out.println("이미 같은 과제가 등록되어 있습니다.");
+                return;
+            }
+        }
+        assignment.setTitle(title);
+        assignment.setDueMonth(due[0]);
+        assignment.setDueDay(due[1]);
+        System.out.println("과제 정보가 수정되었습니다.");
     }
 
     public void removeByCourse(Course course){

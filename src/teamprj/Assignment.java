@@ -16,7 +16,7 @@ public class Assignment {
     }
 
     public int getDday(int todayMonth, int todayDay) {
-        return Ddaycalculate.calcDday(dueMonth, dueDay,todayMonth, todayDay);
+        return DdayCalculate.calcDday(dueMonth, dueDay,todayMonth, todayDay);
     }//Ddaycalculate 클래스의 calcDday 메서드를 사용해서 디데이계산. 현재 날짜는 입력받아야 함
 
     public Course getCourse() {
