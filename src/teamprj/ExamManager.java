@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ExamManager {
+
     private ArrayList<Exam> exams = new ArrayList<>();
     private CourseManager courseManager;
     private final Scanner scanner;
@@ -23,6 +24,7 @@ public class ExamManager {
             System.out.println("강의 번호를 다시 확인해 주세요.");
             return;
         }
+
         int[] date = Input.readDate(scanner, "시험 날짜를 입력하세요 : (ex.11/01)   ");
         int examMonth = date[0];
         int examDay = date[1];
@@ -63,7 +65,6 @@ public class ExamManager {
         return exams.remove(choice-1);
     }
 
-
     public void updateExam(int todayMonth, int todayDay) {
         if (exams.isEmpty()) {
             System.out.println("등록된 시험이 없습니다.");
@@ -88,21 +89,6 @@ public class ExamManager {
         System.out.println("시험 날짜가 수정되었습니다.");
     }
 
-//    // 만료되어 지워진 시험 목록을 반환
-//    public List<Exam> removeExpiredExam(int todayMonth, int todayDay) {
-//        List<Exam> removed = new ArrayList<>();
-//        Iterator<Exam> it = exams.iterator();
-//        while (it.hasNext()) {
-//            Exam e = it.next();
-//            if (e.getDday(todayMonth, todayDay) <= -1) {
-//                removed.add(e);
-//                it.remove();
-//            }
-//        }
-//        return removed;
-//    }
-
-    // 강의 삭제 시 해당 강의의 시험 삭제 + 지워진 시험 반환
     public List<Exam> removeByCourse(Course course) {
         List<Exam> removed = new ArrayList<>();
         for (Exam e : exams) {
@@ -114,14 +100,7 @@ public class ExamManager {
         return removed;
     }
 
-    public Exam getExamByIndex(int index) {
-        if (index < 0 || index >= exams.size()) {
-            return null;
-        }
-        return exams.get(index);
-    }
-
-    public List<Exam> getPastExams(int todayMonth, int todayDay) {   // 이미 본 시험 모으기
+    public List<Exam> getPastExams(int todayMonth, int todayDay) {
         List<Exam> pastExams = new ArrayList<>();
         for (Exam e : exams) {
             if (e.getDday(todayMonth, todayDay) <= 0) {
@@ -131,7 +110,33 @@ public class ExamManager {
         return pastExams;
     }
 
+    public Exam getExamByIndex(int index) {
+        if (index < 0 || index >= exams.size()) {
+            return null;
+        }
+        return exams.get(index);
+    }
+
     public ArrayList<Exam> getExams() {
         return exams;
     }
+
+    //=================
+    // ExamManager에 추가
+    public boolean addExam(Course course, int month, int day) {
+        if (course == null || !DdayCalculate.ValidDate(month, day)) return false;
+        for (Exam e : exams) {
+            if (e.getCourse() == course && e.getExamMonth() == month && e.getExamDay() == day) {
+                return false; // 중복
+            }
+        }
+        exams.add(new Exam(course, month, day));
+        return true;
+    }
+
+    public Exam removeExam(int index) {
+        if (index < 0 || index >= exams.size()) return null;
+        return exams.remove(index);
+    }
+
 }
