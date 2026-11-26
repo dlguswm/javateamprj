@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
     private int todayDay;
 
     private JTabbedPane tabbedPane;
-    private JTextField dateField;
+    //private JTextField dateField;
     private JLabel dateStatusLabel;
     private JLabel alertLabel;
 
@@ -163,15 +163,9 @@ public class MainFrame extends JFrame {
 
         JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 10));
         datePanel.setBackground(new Color(240, 244, 248));
-        datePanel.add(new JLabel("기준 날짜(월/일): "));
-        dateField = new JTextField(todayMonth + "/" + todayDay, 6);
-        JButton dateBtn = new JButton("날짜 변경");
+
         dateStatusLabel = new JLabel("현재 기준일: " + todayMonth + "월 " + todayDay + "일");
 
-        dateBtn.addActionListener(new DateActionListener());
-
-        datePanel.add(dateField);
-        datePanel.add(dateBtn);
         datePanel.add(dateStatusLabel);
 
         northPanel.add(titlePanel, BorderLayout.WEST);
@@ -186,14 +180,9 @@ public class MainFrame extends JFrame {
 
 //-==============
         coursePanel = new CoursePanel(courseManager, assignmentManager, examManager, scoreManager);
-        assignmentPanel = new AssignmentPanel(courseManager, assignmentManager,
-                () -> new int[]{todayMonth, todayDay});
-        examPanel = new ExamPanel(courseManager, examManager,
-                () -> new int[]{todayMonth, todayDay},
-                this::onExamChanged);
-        scorePanel = new ScorePanel(scoreManager,
-                () -> new int[]{todayMonth, todayDay},
-                () -> statsPanel.refresh());
+        assignmentPanel = new AssignmentPanel(courseManager, assignmentManager, todayMonth, todayDay);
+        examPanel = new ExamPanel(courseManager, examManager, todayMonth, todayDay, this::onExamChanged);
+        scorePanel = new ScorePanel(scoreManager, todayMonth, todayDay, () -> statsPanel.refresh());
         statsPanel = new StatsPanel(scoreManager);
 
         // 팀원 A, B 패널 완성 시 아래 createDummyPanel(...) 대신 실제 패널 객체를 넣으세요.
@@ -283,6 +272,7 @@ public class MainFrame extends JFrame {
     //    return p;
     //}
 
+/*
     private class DateActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             try {
@@ -316,7 +306,8 @@ public class MainFrame extends JFrame {
             }
         }
 
-    }
+    } */
+
 
 
     public static void main(String[] args) {

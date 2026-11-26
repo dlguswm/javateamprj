@@ -10,7 +10,9 @@ public class ExamPanel extends JPanel {
     private final CourseManager courseManager;
     private final ExamManager examManager;
 
-    private final Supplier<int[]> today;   // {월, 일}
+    //private final Supplier<int[]> today;   // {월, 일}
+    private final int todayMonth;
+    private final int todayDay;
     private final Runnable onChanged;      // 시험이 바뀌면 다른 탭 갱신용
 
     private final DefaultTableModel model = new DefaultTableModel(
@@ -25,10 +27,11 @@ public class ExamPanel extends JPanel {
     //daySpinner는 나중에 validDate로 한 번 더 검사.
 
 
-    public ExamPanel(CourseManager cm, ExamManager em, Supplier<int[]> today, Runnable onChanged) {
+    public ExamPanel(CourseManager cm, ExamManager em, int todayMonth, int todayDay, Runnable onChanged) {
         this.courseManager = cm;
         this.examManager = em;
-        this.today = today;
+        this.todayMonth = todayMonth;
+        this.todayDay = todayDay;
         this.onChanged = onChanged;
 
         setLayout(new BorderLayout(8, 8));
@@ -148,12 +151,11 @@ public class ExamPanel extends JPanel {
         for (Course c : courseManager.getCourses()) courseBox.addItem(c);
         if (selected != null) courseBox.setSelectedItem(selected);
 
-        int[] t = today.get();
         model.setRowCount(0);
         List<Exam> exams = examManager.getExams();
         int num = 1;
         for (Exam e : exams) {
-            int dday = e.getDday(t[0], t[1]);
+            int dday = e.getDday(todayMonth, todayDay);
             model.addRow(new Object[]{
                     num++,
                     e.getCourseName(),

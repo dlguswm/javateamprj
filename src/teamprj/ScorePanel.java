@@ -9,12 +9,17 @@ import java.util.function.Supplier;
 
 public class ScorePanel extends JPanel {
     private final ScoreManager scoreManager;
-    private final Supplier<int[]> today;
+    //private final Supplier<int[]> today;
+    private final int todayMonth;
+    private final int todayDay;
     private final Runnable onChanged;
 
     private final DefaultTableModel model = new DefaultTableModel(
             new String[]{"번호", "강의명", "학년/학기", "학점", "받은 성적"}, 0) {
-        @Override public boolean isCellEditable(int r, int c) { return false; }
+        @Override
+        public boolean isCellEditable(int r, int c) {
+            return false;
+        }
     };
     private final JTable table = new JTable(model);
     private final List<Score> shown = new ArrayList<>(); //지금 표에 보이는 성적들의 목록!! 조건별검색그거때메
@@ -26,9 +31,11 @@ public class ScorePanel extends JPanel {
     private final JComboBox<Course> courseBox = new JComboBox<>();
     private final JSpinner scoreSpinner = new JSpinner(new SpinnerNumberModel(4.0, 0.0, 4.5, 0.5));
 
-    public ScorePanel(ScoreManager sm, Supplier<int[]> today, Runnable onChanged) {
+    public ScorePanel(ScoreManager sm, int todayMonth, int todayDay, Runnable onChanged) {
         this.scoreManager = sm;
-        this.today = today;
+        //his.today = today;
+        this.todayMonth = todayMonth;
+        this.todayDay = todayDay;
         this.onChanged = onChanged;
 
         setLayout(new BorderLayout(8, 8));
@@ -125,16 +132,15 @@ public class ScorePanel extends JPanel {
         }
         summary.setText(
                 shown.isEmpty()
-                ? "표시할 성적이 없습니다."
-                : String.format("총 %d학점 | 평점평균 : %.2f",
-                scoreManager.totalCreditOf(shown), scoreManager.gpaOf(shown)));
+                        ? "표시할 성적이 없습니다."
+                        : String.format("총 %d학점 | 평점평균 : %.2f",
+                        scoreManager.totalCreditOf(shown), scoreManager.gpaOf(shown)));
     }
 
     public void refresh() {
-        int[] t = today.get();
         Object selected = courseBox.getSelectedItem();
         courseBox.removeAllItems();
-        for (Course c : scoreManager.getGradableCourses(t[0], t[1])) courseBox.addItem(c);
+        for (Course c : scoreManager.getGradableCourses(todayMonth, todayDay)) courseBox.addItem(c);
         if (selected != null) courseBox.setSelectedItem(selected);
         reloadTable();
     }
