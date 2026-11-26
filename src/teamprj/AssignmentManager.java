@@ -9,10 +9,12 @@ public class AssignmentManager {
     private CourseManager courseManager;
     private final Scanner scanner;
 
+    //생성자
     public AssignmentManager(CourseManager courseManager, Scanner scanner) {
         this.courseManager = courseManager;
         this.scanner = scanner;
     }
+
 
     public void addAssignment() {
         courseManager.showCourses();
@@ -41,7 +43,8 @@ public class AssignmentManager {
     }
 
 
-    public void showAssignment(int todayMonth, int todayDay) { //기본은 디데이순으로 할거임
+    //디데이순으로 전체 과제 보기
+    public void showAssignment(int todayMonth, int todayDay) {
         if (assignments.isEmpty()) {
             System.out.println("등록된 과제가 없습니다.");
             return;
@@ -56,6 +59,8 @@ public class AssignmentManager {
         }
     }
 
+
+    //디데이 순으로 정렬
     private void sortByDday(int todayMonth, int todayDay) {
         for (int i = 0; i < assignments.size() - 1; i++) {
             int min = i;
@@ -70,6 +75,8 @@ public class AssignmentManager {
         }
     }
 
+
+    //강의별 과제 보기 (조건검색)
     public void showAssignmentByCourse(int todayMonth, int todayDay) {
         if (assignments.isEmpty()) {
             System.out.println("등록된 과제가 없습니다.");
@@ -94,6 +101,9 @@ public class AssignmentManager {
         }
     }
 
+
+    //과제 삭제
+    //목록을 보여주고 번호를 받아 그 위치의 과제를 remove() 지우면 뒤의 과제들이 자동으로 앞으로 당겨짐
     public void deleteAssignment(int todayMonth, int todayDay) {
         if (assignments.isEmpty()) {
             System.out.println("등록된 과제가 없습니다.");
@@ -104,7 +114,9 @@ public class AssignmentManager {
         assignments.remove(choice-1);
     }
 
-    public void updateDone(int todayMonth, int todayDay) {  //과제 제출여부 수정할 때
+
+    //제출 여부 수정
+    public void updateDone(int todayMonth, int todayDay) {
         if (assignments.isEmpty()) {
             System.out.println("등록된 과제가 없습니다.");
             return;
@@ -117,6 +129,8 @@ public class AssignmentManager {
     }
 
 
+    //과제 수정
+    //과제를 고르고 현재 정보를 보여준 다음 새 과제명과 새 마감일을 입력받아 setter로 바꿈
     public void updateAssignment(int todayMonth, int todayDay) {
         if (assignments.isEmpty()) {
             System.out.println("등록된 과제가 없습니다.");
@@ -143,11 +157,15 @@ public class AssignmentManager {
         System.out.println("과제 정보가 수정되었습니다.");
     }
 
+
+    //강의 삭제 시 그 과제 삭제
     public void removeByCourse(Course course){
         assignments.removeIf(a -> a.getCourse() == course);
     }
 
-    public void removeExpiredAssignment(int todayMonth, int todayDay) { //과제 D+7 되면 자동삭제되게 하기
+
+    //과제 D+7 되면 자동 삭제
+    public void removeExpiredAssignment(int todayMonth, int todayDay) {
         Iterator<Assignment> it = assignments.iterator();
         while (it.hasNext()) {
             Assignment a = it.next();
@@ -157,7 +175,60 @@ public class AssignmentManager {
         }
     }
 
+    //과제 목록 전체
     public ArrayList<Assignment> getAssignments() {
         return assignments;
+    }
+
+
+    // ================= GUI용 메서드 (2단계) =================
+    // 화면에서 받은 값을 매개변수로 받아 처리하고, 결과는 true/false로 돌려줌
+
+    // 중복 검사: 같은 강의 + 같은 마감일이면 중복 (except는 수정할 때 자기 자신)
+    private boolean isDuplicate(Course course, int month, int day, Assignment except) {
+        for (Assignment a : assignments) {
+            if (a != except && a.getCourse() == course
+                    && a.getDueMonth() == month && a.getDueDay() == day) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 과제 추가: 처음엔 제출 안 한 상태(false)로 추가, 중복이면 false
+    public boolean addAssignment(Course course, String title, int month, int day) {
+        if (isDuplicate(course, month, day, null)) {
+            return false;
+        }
+        assignments.add(new Assignment(course, title, month, day, false));
+        return true;
+    }
+
+    // 과제 수정: 과제명과 마감일을 바꿈, 중복이면 false
+    public boolean updateAssignment(Assignment assignment, String title, int month, int day) {
+        if (isDuplicate(assignment.getCourse(), month, day, assignment)) {
+            return false;
+        }
+        assignment.setTitle(title);
+        assignment.setDueMonth(month);
+        assignment.setDueDay(day);
+        return true;
+    }
+
+    // 과제 삭제: 표에서 고른 과제 객체를 그대로 지움
+    public void deleteAssignment(Assignment assignment) {
+        assignments.remove(assignment);
+    }
+
+    // 디데이 순으로 정렬한 뒤, course가 null이면 전체 과제, 아니면 그 강의 과제만 돌려줌
+    public ArrayList<Assignment> getAssignmentList(Course course, int todayMonth, int todayDay) {
+        sortByDday(todayMonth, todayDay);
+        ArrayList<Assignment> result = new ArrayList<>();
+        for (Assignment a : assignments) {
+            if (course == null || a.getCourse() == course) {
+                result.add(a);
+            }
+        }
+        return result;
     }
 }
