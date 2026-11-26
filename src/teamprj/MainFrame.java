@@ -1,10 +1,10 @@
 package teamprj;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.Scanner;
 
 public class MainFrame extends JFrame {
@@ -21,8 +21,13 @@ public class MainFrame extends JFrame {
     private JTextField dateField;
     private JLabel dateStatusLabel;
     private JLabel alertLabel;
+
     private CoursePanel coursePanel;
     private AssignmentPanel assignmentPanel;
+    private ExamPanel examPanel;
+    private ScorePanel scorePanel;
+    private StatsPanel statsPanel;
+
 
     public MainFrame(String title) {
         super(title);
@@ -124,7 +129,7 @@ public class MainFrame extends JFrame {
         fileMenu.add(exitItem);
 
         JMenu viewMenu = new JMenu("탭 이동(Menu)");
-        String[] menuTitles = {"1. 강의 관리", "2. 과제 관리", "3. 시험 관리", "4. 학점 관리"};
+        String[] menuTitles = {"1. 강의 관리", "2. 과제 관리", "3. 시험 관리", "4. 학점 관리", "5. 통계"};
 
         for (int i = 0; i < menuTitles.length; i++) {
             JMenuItem item = new JMenuItem(menuTitles[i]);
@@ -177,20 +182,37 @@ public class MainFrame extends JFrame {
         tabbedPane = new JTabbedPane();
         tabbedPane.setFont(new Font("맑은 고딕", Font.BOLD, 13));
 
+        //coursePanel = new CoursePanel()
+
+//-==============
+        coursePanel = new CoursePanel(courseManager, assignmentManager, examManager, scoreManager);
+        assignmentPanel = new AssignmentPanel(courseManager, assignmentManager,
+                () -> new int[]{todayMonth, todayDay});
+        examPanel = new ExamPanel(courseManager, examManager,
+                () -> new int[]{todayMonth, todayDay},
+                this::onExamChanged);
+        scorePanel = new ScorePanel(scoreManager,
+                () -> new int[]{todayMonth, todayDay},
+                () -> statsPanel.refresh());
+        statsPanel = new StatsPanel(scoreManager);
+
         // 팀원 A, B 패널 완성 시 아래 createDummyPanel(...) 대신 실제 패널 객체를 넣으세요.
         // 예: tabbedPane.addTab("1. 강의 관리", new CoursePanel(...));
-        coursePanel = new CoursePanel(courseManager, assignmentManager, examManager, scoreManager);
-        assignmentPanel = new AssignmentPanel(courseManager, assignmentManager, todayMonth, todayDay);
         tabbedPane.addTab("1. 강의 관리", coursePanel);
         tabbedPane.addTab("2. 과제 관리", assignmentPanel);
-        tabbedPane.addTab("3. 시험 관리", createDummyPanel("3. 시험 관리 화면 (팀원 B 구현 예정)"));
-        tabbedPane.addTab("4. 학점 관리", createDummyPanel("4. 학점 관리 화면 (팀원 B 구현 예정)"));
+        tabbedPane.addTab("3. 시험 관리", examPanel);
+        tabbedPane.addTab("4. 학점 관리", scorePanel);
+        tabbedPane.addTab("5. 통계", statsPanel);
 
-        // 탭을 바꿀 때마다 최신 데이터로 다시 그림 (다른 탭에서 바뀐 내용 반영)
+        //=======
         tabbedPane.addChangeListener(new ChangeListener() {
+            @Override
             public void stateChanged(ChangeEvent e) {
                 coursePanel.refresh();
-                assignmentPanel.refreshCourses();
+                assignmentPanel.refresh();
+                examPanel.refresh();
+                scorePanel.refresh();
+                statsPanel.refresh();
                 updateAlertLabel();
             }
         });
@@ -203,6 +225,7 @@ public class MainFrame extends JFrame {
         alertLabel.setFont(new Font("맑은 고딕", Font.BOLD, 13));
         southPanel.add(alertLabel);
         contentPane.add(southPanel, BorderLayout.SOUTH);
+
     }
 
     private void showUpcomingAlertPopup() {
@@ -245,13 +268,20 @@ public class MainFrame extends JFrame {
         return msg;
     }
 
-    private JPanel createDummyPanel(String text) {
-        JPanel p = new JPanel(new FlowLayout());
-        JLabel label = new JLabel(text);
-        label.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
-        p.add(label);
-        return p;
+    //==============
+    private void onExamChanged(){
+        scorePanel.refresh();
+        statsPanel.refresh();
+        updateAlertLabel();
     }
+
+    //private JPanel createDummyPanel(String text) {
+    //    JPanel p = new JPanel(new FlowLayout());
+    //    JLabel label = new JLabel(text);
+    //    label.setFont(new Font("맑은 고딕", Font.PLAIN, 16));
+    //    p.add(label);
+    //    return p;
+    //}
 
     private class DateActionListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
@@ -264,8 +294,15 @@ public class MainFrame extends JFrame {
                     todayDay = d;
                     dateStatusLabel.setText("현재 기준일: " + todayMonth + "월 " + todayDay + "일");
                     assignmentManager.removeExpiredAssignment(todayMonth, todayDay);
-                    assignmentPanel.setToday(todayMonth, todayDay);
                     updateAlertLabel();
+
+                    //==========
+                    assignmentPanel.refresh();
+                    examPanel.refresh();
+                    scorePanel.refresh();
+                    statsPanel.refresh();
+                    //=============
+
                     showUpcomingAlertPopup();
                 } else {
                     JOptionPane.showMessageDialog(MainFrame.this,
@@ -278,7 +315,9 @@ public class MainFrame extends JFrame {
                         "형식 오류", JOptionPane.ERROR_MESSAGE);
             }
         }
+
     }
+
 
     public static void main(String[] args) {
         new MainFrame("7조 대학생 학점 · 과제 트래커");
