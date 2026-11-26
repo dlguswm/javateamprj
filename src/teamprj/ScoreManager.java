@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ScoreManager {
+
     private LinkedHashMap<Course, Score> scores = new LinkedHashMap<>();
     private ExamManager examManager;
     private final Scanner scanner;
@@ -17,7 +18,6 @@ public class ScoreManager {
     }
 
     public void addGrades(int todayMonth, int todayDay) {
-        // 이미 시험을 본 강의만, 중복 없이 모으기
         LinkedHashSet<Course> courseSet = new LinkedHashSet<>();
         for (Exam e : examManager.getPastExams(todayMonth, todayDay)) {
             courseSet.add(e.getCourse());
@@ -28,14 +28,17 @@ public class ScoreManager {
         }
         List<Course> list = new ArrayList<>(courseSet);
         System.out.println("------ 성적 입력 가능한 강의 목록 ------");
-        for (int i = 0; i < list.size(); i++) {
-            System.out.println((i + 1) + "." + list.get(i));
+        int num = 1;
+        for (Course c : list) {
+            System.out.println(num + "." + c);
+            num++;
         }
+
         int choice = Input.readInt(scanner, "성적을 입력/수정 할 강의 번호 : ", 1, list.size());
         Course course = list.get(choice - 1);
-
         float value = Input.readFloat(scanner, "성적을 입력하세요 (0.0 ~ 4.5) : ", 0f, 4.5f);
         Score old = scores.get(course);
+
         if (old != null) {
             old.setScore(value);
             System.out.println("성적이 수정되었습니다.");
@@ -45,7 +48,7 @@ public class ScoreManager {
         }
     }
 
-    public void showGrade() { //전체 보여주기
+    public void showGrade() {
         if (scores.isEmpty()) {
             System.out.println("등록된 시험 성적이 없습니다.");
             return;
@@ -59,10 +62,9 @@ public class ScoreManager {
         }
         System.out.print("[총 학점] : ");
         printGpa(list);
-
     }
 
-    public void showGradeByGrade(){//학년 별 보여주기
+    public void showGradeByGrade(){
         int grade = Input.readInt(scanner,"조회할 성적의 학년을 입력해주세요 : ");
 
         List<Score> list = new ArrayList<>();
@@ -71,6 +73,7 @@ public class ScoreManager {
                 list.add(score);
             }
         }
+
         if(list.isEmpty()){
             System.out.println("학년에 등록된 성적이 없습니다.");
             return;
@@ -85,7 +88,7 @@ public class ScoreManager {
         printGpa(list);
     }
 
-    public void showGradeBySemester() { // 학년+학기 별 보여주기 + 해당 학기 평점평균
+    public void showGradeBySemester() {
         int grade = Input.readInt(scanner,"조회할 성적의 학년을 입력해주세요 : ");
         int semester = Input.readInt(scanner,"조회할 성적의 학기를 입력해주세요 : ",1,2);
 
@@ -95,6 +98,7 @@ public class ScoreManager {
                 list.add(score);
             }
         }
+
         if (list.isEmpty()) {
             System.out.println("해당 학기에 등록된 성적이 없습니다.");
             return;
@@ -108,34 +112,59 @@ public class ScoreManager {
         printGpa(list);
     }
 
-    private double calcGpa(List<Score> list){
-        double sum =0;
-        int totalCredit =0;
-        for(Score s : list){
-            int credit = s.getCredit();
-            sum += credit*s.getScore();
-            totalCredit += credit;
-        }
-        return totalCredit ==0 ? 0 : sum/totalCredit;
-    }
-
-    private int calcTotalCredit(List<Score> list){
-        int total =0;
-        for(Score s : list){
+    private int calcTotalCredit(List<Score> list) {
+        int total = 0;
+        for (Score s : list) {
             total += s.getCredit();
         }
         return total;
     }
 
+    private double calcGpa(List<Score> list){
+        int totalCredit = calcTotalCredit(list);
+        if (totalCredit == 0) return 0;
+
+        double sum = 0;
+        for (Score s : list) {
+            sum += s.getCredit() * s.getScore();
+        }
+        return sum / totalCredit;
+    }
+
     private void printGpa(List<Score> list){
         System.out.printf("총 %d학점 | 평점평균 : %.2f%n",calcTotalCredit(list), calcGpa(list));
     }
-
-public void removeScore(Course course) {
-    scores.remove(course);
-}
-
-public LinkedHashMap<Course, Score> getScores() {
+    public void removeScore(Course course) {
+        scores.remove(course);
+    }
+    public LinkedHashMap<Course, Score> getScores() {
         return scores;
     }
+
+
+    //===========================GUI
+
+    public List<Course> getGradableCourses(int todayMonth, int todayDay) {
+        LinkedHashSet<Course> set = new LinkedHashSet<>();
+        for (Exam e : examManager.getPastExams(todayMonth, todayDay)) {
+            set.add(e.getCourse());
+        }
+        return new ArrayList<>(set);
+    }
+
+    // return true = 신규 등록, false = 기존 성적 수정
+    public boolean setScore(Course course, float value) {
+        Score old = scores.get(course);
+        if (old != null) {
+            old.setScore(value);
+            return false;
+        }
+        scores.put(course, new Score(course, value));
+        return true;
+    }
+
+    public int totalCreditOf(List<Score> list) { return calcTotalCredit(list); }
+    public double gpaOf(List<Score> list) { return calcGpa(list); }
+
+
 }
