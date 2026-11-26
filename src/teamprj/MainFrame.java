@@ -176,8 +176,6 @@ public class MainFrame extends JFrame {
         tabbedPane = new JTabbedPane();
         tabbedPane.setFont(new Font("맑은 고딕", Font.BOLD, 13));
 
-        //coursePanel = new CoursePanel()
-
 //-==============
         coursePanel = new CoursePanel(courseManager, assignmentManager, examManager, scoreManager);
         assignmentPanel = new AssignmentPanel(courseManager, assignmentManager, todayMonth, todayDay);
@@ -198,7 +196,7 @@ public class MainFrame extends JFrame {
             @Override
             public void stateChanged(ChangeEvent e) {
                 coursePanel.refresh();
-                assignmentPanel.refresh();
+                assignmentPanel.refreshCourses();
                 examPanel.refresh();
                 scorePanel.refresh();
                 statsPanel.refresh();
@@ -307,8 +305,6 @@ public class MainFrame extends JFrame {
         }
 
     } */
-
-
 
     public static void main(String[] args) {
         new MainFrame("7조 대학생 학점 · 과제 트래커");
