@@ -25,6 +25,8 @@ public class AssignmentPanel extends JPanel {
     private JTextField dateField = new JTextField(5);
     private JProgressBar progressBar = new JProgressBar();
 
+    private JLabel todayLabel = new JLabel();   // 위쪽에 오늘 날짜 표시
+
     public AssignmentPanel(CourseManager courseManager, AssignmentManager assignmentManager,
                            int todayMonth, int todayDay) {
         this.courseManager = courseManager;
@@ -39,7 +41,8 @@ public class AssignmentPanel extends JPanel {
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         topPanel.add(new JLabel("강의별 보기"));
         topPanel.add(filterBox);
-        topPanel.add(new JLabel("   오늘 " + todayMonth + "/" + todayDay + " · 마감이 가까운 순"));
+        todayLabel.setText("   오늘 " + todayMonth + "/" + todayDay + " · 마감이 가까운 순");
+        topPanel.add(todayLabel);
         add(topPanel, BorderLayout.NORTH);
 
         // 2. 가운데: 과제 표 (첫 칸은 체크박스)
@@ -153,6 +156,14 @@ public class AssignmentPanel extends JPanel {
         }
         refreshing = false;
         updateProgress();
+    }
+
+    // 메인 창에서 기준 날짜를 바꾸면 호출: 날짜를 바꾸고 디데이를 다시 계산해서 표를 다시 그림
+    public void setToday(int todayMonth, int todayDay) {
+        this.todayMonth = todayMonth;
+        this.todayDay = todayDay;
+        todayLabel.setText("   오늘 " + todayMonth + "/" + todayDay + " · 마감이 가까운 순");
+        refresh();
     }
 
     // 지금 보이는 과제 중 제출한 비율을 진행률 막대에 표시

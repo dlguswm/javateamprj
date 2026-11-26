@@ -3,6 +3,8 @@ package teamprj;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.util.Scanner;
 
 public class MainFrame extends JFrame {
@@ -19,6 +21,8 @@ public class MainFrame extends JFrame {
     private JTextField dateField;
     private JLabel dateStatusLabel;
     private JLabel alertLabel;
+    private CoursePanel coursePanel;
+    private AssignmentPanel assignmentPanel;
 
     public MainFrame(String title) {
         super(title);
@@ -175,10 +179,21 @@ public class MainFrame extends JFrame {
 
         // 팀원 A, B 패널 완성 시 아래 createDummyPanel(...) 대신 실제 패널 객체를 넣으세요.
         // 예: tabbedPane.addTab("1. 강의 관리", new CoursePanel(...));
-        tabbedPane.addTab("1. 강의 관리", createDummyPanel("1. 강의 관리 화면 (팀원 A 구현 예정)"));
-        tabbedPane.addTab("2. 과제 관리", createDummyPanel("2. 과제 관리 화면 (팀원 A 구현 예정)"));
+        coursePanel = new CoursePanel(courseManager, assignmentManager, examManager, scoreManager);
+        assignmentPanel = new AssignmentPanel(courseManager, assignmentManager, todayMonth, todayDay);
+        tabbedPane.addTab("1. 강의 관리", coursePanel);
+        tabbedPane.addTab("2. 과제 관리", assignmentPanel);
         tabbedPane.addTab("3. 시험 관리", createDummyPanel("3. 시험 관리 화면 (팀원 B 구현 예정)"));
         tabbedPane.addTab("4. 학점 관리", createDummyPanel("4. 학점 관리 화면 (팀원 B 구현 예정)"));
+
+        // 탭을 바꿀 때마다 최신 데이터로 다시 그림 (다른 탭에서 바뀐 내용 반영)
+        tabbedPane.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                coursePanel.refresh();
+                assignmentPanel.refreshCourses();
+                updateAlertLabel();
+            }
+        });
 
         contentPane.add(tabbedPane, BorderLayout.CENTER);
 
@@ -249,6 +264,7 @@ public class MainFrame extends JFrame {
                     todayDay = d;
                     dateStatusLabel.setText("현재 기준일: " + todayMonth + "월 " + todayDay + "일");
                     assignmentManager.removeExpiredAssignment(todayMonth, todayDay);
+                    assignmentPanel.setToday(todayMonth, todayDay);
                     updateAlertLabel();
                     showUpcomingAlertPopup();
                 } else {
